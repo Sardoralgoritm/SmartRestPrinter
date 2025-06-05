@@ -1,0 +1,416 @@
+﻿<Page x:Class="SmartRestaurant.Desktop.Pages.ReportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+      xmlns:local="clr-namespace:SmartRestaurant.Desktop.Components.Loader"
+      mc:Ignorable="d"
+      Loaded="Page_Loaded">
+
+    <Grid
+        Grid.Row="1">
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.7*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid
+            Grid.Column="0">
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1.2*"/>
+            </Grid.RowDefinitions>
+
+            <Border
+                Grid.Row="0"
+                Margin="15 15 5 10"
+                CornerRadius="8"
+                BorderBrush="#C2E8E8"
+                BorderThickness="1"
+                Background="#F2FFFF">
+
+                <StackPanel
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="20">
+
+                    <Label
+                        FontSize="20"
+                        Content="Savdo summasi :"
+                        FontWeight="Bold"
+                        Foreground="#333333"
+                        HorizontalAlignment="Center"/>
+
+                    <Label
+                        Name="lb_TotalPrice"
+                        FontSize="30"
+                        FontWeight="Bold"
+                        Foreground="#333333"
+                        HorizontalAlignment="Center"/>
+
+                    <Label
+                        FontSize="20"
+                        Margin="0 30 0 0"
+                        Content="Buyurtmalar soni :"
+                        FontWeight="Bold"
+                        Foreground="#333333"
+                        HorizontalAlignment="Center"/>
+
+                    <Label
+                        Name="lb_OrderCount"
+                        FontSize="30"
+                        FontWeight="Bold"
+                        Foreground="#333333"
+                        HorizontalAlignment="Center"/>
+
+                </StackPanel>
+
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="20"
+                        Opacity="9"
+                        ShadowDepth="0"
+                        Color="#DEDEDE">
+
+                    </DropShadowEffect>
+                </Border.Effect>
+
+            </Border>
+
+            <Border
+                Grid.Row="1"
+                Margin="15 10 5 15"
+                CornerRadius="8"
+                Padding="5"
+                BorderThickness="1"
+                BorderBrush="#FDE6C3"
+                Background="#FFF7E6">
+
+                <Grid>
+                    <TextBlock 
+                        Text="Eng ko‘p sotilgan mahsulotlar"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="#F57C00"
+                        Margin="10 0"/>
+
+                    <lvc:CartesianChart 
+                        x:Name="barChart"
+                        Series="{Binding Series}"
+                        XAxes="{Binding XAxes}"
+                        YAxes="{Binding YAxes}"
+                        LegendPosition="Hidden"
+                        Padding="5"
+                        Margin="0 10 0 0"/>
+
+                    <Label
+                        Name="ChartEmptyData"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="Gray"
+                        Visibility="Collapsed"
+                        Content="Ma'lumot topilmadi."
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+
+                </Grid>
+
+
+                <Border.Effect>
+                    <DropShadowEffect
+                    BlurRadius="20"
+                    Opacity="9"
+                    ShadowDepth="0"
+                    Color="#DEDEDE">
+
+                    </DropShadowEffect>
+                </Border.Effect>
+
+            </Border>
+
+        </Grid>
+
+        <Grid
+            Grid.Column="1"
+            Margin="15 10 15 15">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="90"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid
+                Margin="0 0 0 8"
+                HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel
+                    Orientation="Horizontal">
+
+                    <Label
+                        Content="Dan: "
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="Black"
+                        VerticalAlignment="Center"/>
+
+                    <DatePicker
+                        Margin="15 0 0 0"
+                        Width="150"
+                        x:Name="fromDateTime"
+                        Style="{DynamicResource FormDatePicker}"/>
+
+                    <ComboBox
+                        MaxDropDownHeight="200"
+                        Margin="20 0"
+                        Width="160"
+                        Height="30"
+                        x:Name="filterBy"
+                        SelectionChanged="filterBy_SelectionChanged"
+                        Style="{StaticResource ModernComboBoxStyle}">
+                        <ComboBox.Resources>
+                            <Style TargetType="ComboBoxItem" BasedOn="{StaticResource ModernComboBoxItemStyle}"/>
+                        </ComboBox.Resources>
+
+                        <ComboBoxItem Content="Xizmat ko'rsatish"/>
+                        <ComboBoxItem Content="Kassaga oid"/>
+                        
+                    </ComboBox>
+
+                    <ComboBox 
+                        MaxDropDownHeight="200"
+                        Margin="5 0"
+                        Width="160"
+                        Height="30"
+                        x:Name="status"
+                        SelectedIndex="2"
+                        SelectionChanged="status_SelectionChanged"
+                        Style="{StaticResource ModernComboBoxStyle}">
+                        <ComboBox.Resources>
+                            <Style TargetType="ComboBoxItem" BasedOn="{StaticResource ModernComboBoxItemStyle}"/>
+                        </ComboBox.Resources>
+
+                        <ComboBoxItem Content="Bekor qilingan"/>
+                        <ComboBoxItem Content="Tekinga berilgan"/>
+                        <ComboBoxItem Content="Yopilgan"/>
+                        <ComboBoxItem Content="Hisobot"/>
+                    </ComboBox>
+
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="1"
+                    Orientation="Horizontal">
+                    
+                    <Label
+                        Content="Gacha: "
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="Black"
+                        VerticalAlignment="Center"
+                        Margin="0"/>
+
+                    <DatePicker
+                        Width="150"
+                        x:Name="toDateTime"
+                        Style="{DynamicResource FormDatePicker}"/>
+
+                    <ComboBox
+                        MaxDropDownHeight="200"
+                        Margin="20 0"
+                        Width="160"
+                        Height="30"
+                        x:Name="cbUsers"
+                        SelectionChanged="cbUsers_SelectionChanged"
+                        Style="{StaticResource ModernComboBoxStyle}">
+                        <ComboBox.Resources>
+                            <Style TargetType="ComboBoxItem" BasedOn="{StaticResource ModernComboBoxItemStyle}"/>
+                        </ComboBox.Resources>
+
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <Run Text="{Binding FirstName}"/>
+                                    <Run Text="{Binding LastName}"/>
+                                    <Run Text=" | "/>
+                                    <Run Text="{Binding Role}"/>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <Button Content="Saralash" 
+                        Style="{StaticResource FilterButtonStyle}" 
+                        Width="150"
+                        Margin="10,0,0,0"
+                        Click="FilterButton_Click"/>
+
+                </StackPanel>
+            </Grid>
+
+            <Border
+                Grid.Row="1"
+                CornerRadius="8"
+                Background="White">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid
+                        Grid.Row="0"
+                        Margin="10 0 10 0"
+                        x:Name="Report_name">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Column="0"
+                            Text="No"
+                            Margin="10 0 0 0"
+                            Style="{DynamicResource TitleLabel}"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="Transaction id"
+                            Style="{DynamicResource TitleLabel}"/>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            Text="Stol nomi"
+                            Style="{DynamicResource TitleLabel}"/>
+
+                        <TextBlock
+                            Grid.Column="3"
+                            Text="Manager"
+                            Style="{DynamicResource TitleLabel}"/>
+
+                        <TextBlock
+                            Grid.Column="4"
+                            Text="Narxi"
+                            Style="{DynamicResource TitleLabel}"/>
+
+                    </Grid>
+
+                    <Grid
+                        Grid.Row="1"
+                        Margin="0 0 0 10">
+
+                        <local:Loader
+                            x:Name="Loader"
+                            Visibility="Hidden"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"/>
+
+                        <ScrollViewer
+                            VerticalScrollBarVisibility="Hidden"
+                            PanningMode="VerticalOnly"
+                            IsManipulationEnabled="True"
+                            CanContentScroll="False">
+
+                            <StackPanel
+                                Name="st_Order">
+
+                            </StackPanel>
+
+                        </ScrollViewer>
+
+                        <Label
+                            Name="EmptyData"
+                            Visibility="Collapsed"
+                            FontSize="16"
+                            Foreground="#a6a6a6"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="Ma'lumot topilmadi."/>
+
+                    </Grid>
+
+                    <Grid
+                        Grid.Row="2"
+                        Height="30"
+                        Margin="0 0 10 5"
+                        HorizontalAlignment="Right">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            x:Name="Pervious_Button"
+                            Tag="{StaticResource pervious}"
+                            Style="{StaticResource NextButton}"
+                            Click="Pervious_Button_Click"/>
+
+                        <Border
+                            Grid.Column="1"
+                            Margin="4"
+                            BorderThickness="0.3"
+                            Padding="5 0"
+                            BorderBrush="#383838"
+                            CornerRadius="3">
+
+                            <TextBox
+                                Name="txt_pageNumber"
+                                TextAlignment="Center"
+                                VerticalAlignment="Center"
+                                BorderThickness="0"
+                                FontSize="13"
+                                Text="1"
+                                PreviewTextInput="txt_pageNumber_PreviewTextInput"
+                                KeyDown="txt_pageNumber_KeyDown"/>
+
+                        </Border>
+
+                        <Button
+                            x:Name="Next_Button"
+                            Grid.Column="2"
+                            Tag="{StaticResource next}"
+                            Style="{StaticResource NextButton}"
+                            Click="Next_Button_Click"/>
+
+                        <Button
+                            Name="Last_Page_Button"
+                            Grid.Column="3"
+                            Click="Last_Page_Button_Click"
+                            Style="{StaticResource PageButton}"/>
+
+                    </Grid>
+
+                </Grid>
+
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="20"
+                        Opacity="9"
+                        ShadowDepth="0"
+                        Color="#DEDEDE">
+
+                    </DropShadowEffect>
+                </Border.Effect>
+
+            </Border>
+            
+        </Grid>
+
+    </Grid>
+</Page>

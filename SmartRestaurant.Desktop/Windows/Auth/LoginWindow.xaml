@@ -1,0 +1,171 @@
+﻿<Window x:Class="SmartRestaurant.Desktop.Windows.Auth.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartRestaurant.Desktop.Components.Loader"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Loaded="Window_Loaded"
+        Title="LoginWindow" 
+        Width="900"
+        Height="640">
+    <Grid
+        Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Button
+            x:Name="Close_Button"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"
+            Background="Black"
+            Style="{DynamicResource ClosedButton}"
+            Grid.Column="1"
+            Click="CloseButton_Click"/>
+
+        <Border
+            VerticalAlignment="Center"
+            Grid.Column="1"
+            Margin="50 80"
+            Padding="0 40"
+            CornerRadius="50"
+            Background="White">
+
+            <StackPanel
+                Margin="30 10 30 10">
+
+                <Label
+                    FontSize="30"
+                    Content="Kirish"
+                    FontWeight="Bold"
+                    HorizontalAlignment="Center"
+                    Foreground="{DynamicResource BorderColor}"/>
+
+                <Border
+                    Height="40"
+                    CornerRadius="5"
+                    Margin="0 20 0 0 "
+                    BorderThickness="0.5"
+                    BorderBrush="{DynamicResource BorderColor}">
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Path 
+                            Fill="#F0A81A" 
+                            Data="{DynamicResource lock}"
+                            Height="25"
+                            Width="25"
+                            Stretch="Uniform"/>
+
+                        <PasswordBox
+                            Name="pbPassword"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            BorderThickness="0" 
+                            HorizontalAlignment="Left"
+                            Width="239"
+                            Focusable="True"
+                            KeyDown="txtPhoneNumber_KeyDown"/>
+
+                        <TextBox 
+                            x:Name="tbPassword" 
+                            Grid.Column="1"
+                            Visibility="Collapsed"
+                            Margin="4"
+                            VerticalAlignment="Center"
+                            Foreground="Black"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            BorderThickness="0"
+                            KeyDown="txtPhoneNumber_KeyDown"/>
+
+                        <Button
+                            Grid.Column="2"
+                            x:Name="btnVisible"
+                            Click="btnVisible_Click"
+                            Visibility="Visible"
+                            Style="{DynamicResource btnLoginEyeVisible}"
+                            />
+
+                        <Button
+                            Grid.Column="2"
+                            x:Name="btnDisVisible"
+                            Click="btnDisVisible_Click"
+                            Visibility="Collapsed"
+                            Style="{DynamicResource btnLoginEyeDisVisible}"
+                            />
+
+                    </Grid>
+
+                </Border>
+
+                <local:Loader
+                    x:Name="Loader"
+                    Visibility="Collapsed"
+                    Margin="0 20 0 20"
+                    HorizontalAlignment="Center"/>
+
+                <Button
+                    Name="Login_Button"
+                    Margin="0 20 0 20"
+                    Content="Kirish"
+                    FontSize="20"
+                    Click="Login_Button_Click"
+                    Background="{DynamicResource BSecondColorr}"
+                    Style="{DynamicResource MainButtonn}"/>
+
+            </StackPanel>
+
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="20"
+                    ShadowDepth="2"
+                    Color="Gray">
+                </DropShadowEffect>
+            </Border.Effect>
+
+        </Border>
+
+        <Grid
+            Margin="30 80 0 10"
+            Grid.Column="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+
+            <Image
+                Source="/Assets/Images/SmartRestLogin.png">
+            </Image>
+
+            <Label
+                Grid.Row="1"
+                FontSize="16"
+                FontWeight="SemiBold"
+                Content="Smart Partners"/>
+
+            <Label
+                Margin="0 25 0 0"
+                Grid.Row="4"
+                Content="Version 1.0"/>
+
+        </Grid>
+
+    </Grid>
+    
+</Window>

@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="SmartRestaurant.Desktop.Components.ProductComponent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SmartRestaurant.Desktop.Components"
+             mc:Ignorable="d"
+             Height="60"
+             Margin="5">
+            <Border 
+                Background="White" 
+                Padding="10" CornerRadius="6"
+                BorderBrush="#E0E0E0" 
+                BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock
+                        x:Name="no"
+                        Text="1"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        FontSize="16"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Grid.Column="1"
+                        x:Name="p_name"
+                        Margin="15 0 0 0"
+                        Text="Coca-cola"
+                        VerticalAlignment="Center"
+                        FontSize="16"/>
+
+                    <TextBlock
+                        Grid.Column="2"
+                        x:Name="p_price"
+                        Text="$12.00"
+                        VerticalAlignment="Center"
+                        FontSize="16"/>
+
+                    <TextBlock
+                        Grid.Column="3"
+                        x:Name="p_category"
+                        Text="Drinks"
+                        VerticalAlignment="Center"
+                        FontSize="16"/>
+
+                    <ToggleButton
+                        x:Name="IsActiveToggle"
+                        Grid.Column="4"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource ProductSwitchToggleButtonStyle}" 
+                        Margin="10,0"
+                        Checked="IsActiveToggle_Checked"
+                        Unchecked="IsActiveToggle_Unchecked"/>
+
+                    <Button
+                        Content="Yangilash"
+                        Style="{StaticResource EditButton}"
+                        Width="100" Height="35" Margin="0"
+                        Grid.Column="5"
+                        FontSize="16"
+                        Click="Edit_Click"/>
+
+                    <Button
+                        Content="O'chirish"
+                        Style="{StaticResource DeleteButton}"
+                        Width="100" Height="35" Margin="0"
+                        Grid.Column="6"
+                        FontSize="16"
+                        Click="Delete_Click"/>
+                </Grid>
+            </Border>
+</UserControl>

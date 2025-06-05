@@ -1,0 +1,13 @@
+{
+  "exclude": [
+    "**/bin",
+    "**/bower_components",
+    "**/jspm_packages",
+    "**/node_modules",
+    "**/obj",
+    "**/platforms"
+  ],
+  "ConnectionStrings": {
+    "DefaultConnection": "zhwJwALF3XfbhRASG07EjS1DPBqTqsFEVv561Ew7qCC/eEJ3h9VhV5CKQSifYR9zVUAVZtDfDc9R1LdkkFvBRhpJGhd0sUaH3meIE8Y7ScM="
+  }
+}

@@ -1,0 +1,336 @@
+﻿<Page x:Class="SmartRestaurant.Desktop.Pages.MainPOSPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:SmartRestaurant.Desktop.Components.Loader"
+      mc:Ignorable="d"
+      Title="MainPOSPage"
+      Background="White"
+      Loaded="Page_Loaded">
+
+    <Grid
+        Margin="30 10 30 30">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            x:Name="user_name"
+            Text="Admin"
+            FontSize="18"
+            FontWeight="SemiBold"/>
+
+        <Grid
+            Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.2*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel 
+                Grid.Column="0" 
+                Margin="0,0,20,0">
+
+                <TextBlock
+                    Text="Stollar"
+                    FontSize="20"
+                    FontWeight="Bold"/>
+
+                <ScrollViewer
+                    HorizontalScrollBarVisibility="Hidden"
+                    VerticalScrollBarVisibility="Hidden"
+                    IsManipulationEnabled="True"
+                    PanningMode="HorizontalOnly"
+                    CanContentScroll="False"
+                    Padding="0 3 0 0">
+                    <StackPanel
+                        x:Name="spTableCategoryButtons"
+                        Height="60"
+                        Orientation="Horizontal"/>
+                </ScrollViewer>
+
+                <ScrollViewer 
+                    VerticalScrollBarVisibility="Hidden"
+                    PanningMode="Both"     
+                    CanContentScroll="False"
+                    PanningDeceleration="0.001"
+                    IsManipulationEnabled="True"
+                    PanningRatio="1"
+                    MaxHeight="480"
+                    Margin="0,0,0,12">
+
+                    <WrapPanel 
+                        x:Name="wpTables"
+                        ItemWidth="105"
+                        ItemHeight="80"
+                        Orientation="Horizontal"
+                        Margin="0,0,0,0"/>
+
+                </ScrollViewer>
+
+                <Button 
+                    Content="TakeAway"
+                    x:Name="btnTakeAway"
+                    Style="{StaticResource TakeawayButton}"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Width="200"
+                    Height="80"
+                    Padding="0"
+                    Click="Takeaway_Click"/>
+
+            </StackPanel>
+
+            <Button
+                Grid.Column="0"
+                Name="logout_button"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Click="logout_button_Click"
+                Style="{DynamicResource LogoutButton}"/>
+
+            <Border
+                Grid.Column="1"
+                Width="1"
+                Background="#E0E0E0"
+                HorizontalAlignment="Left"/>
+
+            <Grid
+                Margin="15 0"
+                Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="130"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel 
+                    Grid.Row="0"
+                    Margin="10 0 10 0">
+                    <TextBlock
+                        Text="Menu"
+                        FontSize="20"
+                        FontWeight="Bold"/>
+
+                    <ScrollViewer
+                        HorizontalScrollBarVisibility="Hidden"
+                        VerticalScrollBarVisibility="Hidden"
+                        IsManipulationEnabled="True"
+                        PanningMode="HorizontalOnly"
+                        CanContentScroll="False"
+                        Padding="0 3 0 0">
+                        <StackPanel
+                            x:Name="spCategoryButtons"
+                            Height="60"
+                            Orientation="Horizontal"/>
+                    </ScrollViewer>
+
+                    <TextBox
+                        Name="tb_search_Product"
+                        TextChanged="tb_search_ProductTextChanged"
+                        Loaded="tb_search_Product_Loaded"
+                        Style="{DynamicResource search}"
+                        Height="40"
+                        Margin="5 0 5 0"/>
+
+                </StackPanel>
+
+                <Grid
+                    Grid.Row="1">
+
+                    <local:Loader
+                        x:Name="Loader"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"/>
+
+                    <ScrollViewer 
+                        VerticalScrollBarVisibility="Hidden"
+                        PanningMode="VerticalOnly"
+                        IsManipulationEnabled="True"
+                        CanContentScroll="False"
+                        Margin="0,10"
+                        PanningDeceleration="0.001"
+                        PanningRatio="1">
+
+                        <StackPanel 
+                            x:Name="spProducts"
+                            Margin="0"
+                            Orientation="Vertical" />
+
+                    </ScrollViewer>
+
+                    <Label
+                        FontSize="16"
+                        Name="EmptyData"
+                        Content="Ma'lumot topilmadi."
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Foreground="Gray"
+                        FontWeight="SemiBold"
+                        Visibility="Collapsed"/>
+
+                </Grid>
+
+
+            </Grid>
+
+            <Border
+                Grid.Column="2"
+                Width="1"
+                Background="#E0E0E0"
+                HorizontalAlignment="Left"/>
+
+            <StackPanel 
+                Grid.Column="2" 
+                Margin="30,0,0,0">
+
+                <StackPanel
+                    Margin="0 0 0 10">
+
+                    <TextBlock
+                        Text="Buyurtma tafsilotlari"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        VerticalAlignment="Center"/>
+
+                    <Button
+                        Margin="0 10 0 0"
+                        Grid.Column="1"
+                        Content="Qayta jo'natish"
+                        x:Name="btnReSendToKitchen"
+                        Visibility="Collapsed"
+                        Style="{StaticResource ReSendButton}"
+                        Click="btnResSendToKitchen_Click"/>
+
+                </StackPanel>
+
+                <StackPanel
+                    x:Name="st_queue"
+                    Visibility="Collapsed"
+                    Orientation="Horizontal">
+                    <TextBlock 
+                        Text="Navbat raqami :  "
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Visibility="Visible"
+                        HorizontalAlignment="Left"
+                        Margin="0,0,0,4"/>
+
+                    <TextBlock 
+                        Text="1"
+                        x:Name="lblqueue"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Visibility="Visible"
+                        Margin="0,0,0,4"/>
+
+                </StackPanel>
+
+                <Grid
+                    Margin="0 5 0 0">
+                    <TextBlock 
+                        Text="Buyurtma qilingan mahsulotlar"
+                        x:Name="lblPrevious"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Visibility="Visible"
+                        HorizontalAlignment="Left"
+                        Margin="0,0,0,4"/>
+
+                </Grid>
+
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Hidden"
+                    PanningMode="VerticalOnly"
+                    IsManipulationEnabled="True"
+                    CanContentScroll="False"
+                    Margin="0,0,0,12"
+                    MaxHeight="200"
+                    Visibility="Collapsed"
+                    x:Name="scrollPreviousOrders">
+                    <StackPanel
+                        x:Name="spPreviousOrders"
+                        Margin="0"/>
+                </ScrollViewer>
+
+                <TextBlock
+                    Text="Mahsulotlar"
+                    x:Name="lblAdditional"
+                    FontSize="14"
+                    Visibility="Collapsed"
+                    FontWeight="SemiBold"
+                    Margin="0,0,0,4"/>
+
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Hidden"
+                    PanningMode="VerticalOnly"
+                    IsManipulationEnabled="True"
+                    CanContentScroll="False"
+                    Margin="0,0,0,10"
+                    PanningDeceleration="0.003"
+                    PanningRatio="3"
+                    MaxHeight="400"
+                    x:Name="ScrollSpNewOredrs">
+                    
+                    <StackPanel
+                        x:Name="spNewOrders"
+                        Margin="0,0,0,20"/>
+                </ScrollViewer>
+
+                <Grid
+                    Margin="0 5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        x:Name="txt_total"
+                        Text="Jami:"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Visibility="Collapsed"
+                        Margin="10 0 0 0 "/>
+
+                    <TextBlock 
+                        Grid.Column="1"
+                        Text="0.00"
+                        x:Name="txt_totalPrice"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        Margin="0 0 10 0"
+                        Visibility="Collapsed"
+                        HorizontalAlignment="Right"/>
+                </Grid>
+
+                <Button
+                    Content="Buyurtma yaratish"
+                    x:Name="btnSendToKitchen"
+                    Visibility="Visible"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,0,0,12"
+                    Click="btnSendToKitchen_Click"/>
+
+                <Button
+                    Content="To'lash"
+                    x:Name="btnPay"
+                    Visibility="Visible"
+                    Click="btnPay_Click"
+                    Style="{StaticResource CancelButton}" />
+
+                <Button 
+                    Content="Band qilish"
+                    x:Name="btnbooking"
+                    Visibility="Collapsed"
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,0,0,12"
+                    Click="btnbooking_Click"/>
+
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

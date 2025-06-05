@@ -1,0 +1,95 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using SmartRestaurant.BusinessLogic.Services.Tables.Concrete;
+using SmartRestaurant.BusinessLogic.Services.Tables.DTOs;
+using SmartRestaurant.Desktop.Windows.BlurWindow;
+using SmartRestaurant.Desktop.Windows.Extensions;
+using SmartRestaurant.Domain.Const;
+using System.Windows;
+
+namespace SmartRestaurant.Desktop.Windows.Tables
+{
+    /// <summary>
+    /// Interaction logic for UpdateTableWindow.xaml
+    /// </summary>
+    public partial class UpdateTableWindow : Window
+    {
+        private Guid _tableId;
+        private TableDto? _table;
+        private readonly ITableService _tableService;
+        public event EventHandler? TableUpdated;
+        public UpdateTableWindow(Guid tableId)
+        {
+            InitializeComponent();
+            _tableId = tableId;
+            _tableService = App.ServiceProvider.GetRequiredService<ITableService>();
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            BlurEffect.EnableBlur(this);
+            txtTableName.Focus();
+            _table = await _tableService.GetByIdAsync(_tableId);
+
+            if (_table != null)
+            {
+                txtTableName.Text = _table.Name;
+            }
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private async void Save_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtTableName.Text))
+            {
+                NotificationManager.ShowNotification(NotificationWindow.MessageType.Warning, "Iltimos, stol nomini kiriting.");
+                return;
+            }
+
+            string[] parts = txtTableName.Text.Trim().Split(' ');
+
+            // Kamida 1 ta qism bo‘lishi kerak
+            string numberPart = parts.Length == 1 ? parts[0] : parts[^1];
+
+            if (parts.Length < 2)
+            {
+                NotificationManager.ShowNotification(NotificationWindow.MessageType.Warning, "Stol nomi kamida 2 ta qismdan iborat bo'lishi kerak. Masalan: 'Table 1' yoki 'Stol 1'.");
+                return;
+            }
+
+            if (!int.TryParse(numberPart, out _))
+            {
+                NotificationManager.ShowNotification(NotificationWindow.MessageType.Warning, "Stol nomining oxiri raqam bo‘lishi kerak. Masalan: '1' yoki 'Table 1'.");
+                return;
+            }
+
+            var updatedTable = new TableDto
+            {
+                Id = _tableId,
+                Name = txtTableName.Text,
+                Status = _table?.Status ?? TableStatus.Free
+            };
+
+            var res = await _tableService.UpdateAsync(updatedTable);
+
+            if (res)
+            {
+                NotificationManager.ShowNotification(NotificationWindow.MessageType.Success, "Stol muvaffaqiyatli yangilandi!");
+                TableUpdated?.Invoke(this, EventArgs.Empty);
+                this.Close();
+            }
+            else
+            {
+                NotificationManager.ShowNotification(NotificationWindow.MessageType.Error, "Stolni yangilashda xatolik!");
+            }
+        }
+
+        private void Close_button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+    }
+}

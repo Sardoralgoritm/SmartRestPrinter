@@ -1,0 +1,33 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SmartRestaurant.DataAccess.Data;
+using SmartRestaurant.DataAccess.Interfaces;
+using SmartRestaurant.Domain.Entities;
+
+namespace SmartRestaurant.DataAccess.Repositories;
+
+public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepository
+{
+    private readonly AppDbContext _context;
+
+    public OrderItemRepository(AppDbContext context) : base(context)
+    {
+        _context = context;
+    }
+
+    public void RemoveRange(IEnumerable<OrderItem> entities)
+    {
+        foreach (var entity in entities)
+        {
+            var localEntity = _dbSet.Local.FirstOrDefault(e => e.Id == entity.Id);
+            if (localEntity != null)
+            {
+                _context.Entry(localEntity).State = EntityState.Deleted;
+            }
+            else
+            {
+                _dbSet.Attach(entity);
+                _dbSet.Remove(entity);
+            }
+        }
+    }
+}

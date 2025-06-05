@@ -1,0 +1,111 @@
+﻿<Window x:Class="SmartRestaurant.Desktop.Windows.Tables.AddTableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartRestaurant.Desktop.Windows.Tables"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Background="Transparent"
+        Loaded="Window_Loaded"
+        AllowsTransparency="True">
+
+    <Border
+        Height="280" 
+        Width="380"
+        CornerRadius="10"
+        Background="White">
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Text="Stol qo'shish"
+                Style="{DynamicResource TextBlockStyle}"/>
+
+            <Button
+                Name="close_button"
+                Grid.Row="0"
+                Style="{DynamicResource ClosedButton}"
+                Click="Close_button_Click"/>
+
+            <Grid 
+                Margin="25"
+                Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel 
+                    Grid.Row="0" 
+                    Margin="0,0,0,15">
+                    
+                    <TextBlock 
+                        Text="Stol nomi"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Margin="0,0,0,5"/>
+                    
+                    <TextBox 
+                        x:Name="txtTableName"
+                        FontSize="14"
+                        Height="32"
+                        Padding="6,2"/>
+
+                    <TextBlock
+                        Margin="0 10 0 0"
+                        Text="Kategoriyasi"
+                        FontSize="16"
+                        FontWeight="SemiBold"/>
+
+                    <ComboBox
+                        MaxDropDownHeight="100"
+                        x:Name="cmbCategory"
+                        FontSize="16"
+                        Height="30"/>
+
+                </StackPanel>
+
+                <StackPanel 
+                    Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,0">
+                    
+                    <Button 
+                        Content="Bekor qilish"
+                        Width="100"
+                        Height="35"
+                        Style="{StaticResource CancelButton}"
+                        Click="Cancel_Click"/>
+                    
+                    <Button 
+                        Content="Saqlash"
+                        Width="100"
+                        Height="35"
+                        Style="{StaticResource PrimaryButton}"
+                        Click="Save_Click"/>
+                    
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Border.Effect>
+            <DropShadowEffect
+                BlurRadius="30"
+                Opacity="1"
+                ShadowDepth="0"
+                Color="Gray">
+
+            </DropShadowEffect>
+        </Border.Effect>
+
+    </Border>
+</Window>

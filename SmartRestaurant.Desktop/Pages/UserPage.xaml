@@ -1,0 +1,124 @@
+﻿<Page x:Class="SmartRestaurant.Desktop.Pages.UserPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SmartRestaurant.Desktop.Pages"
+      mc:Ignorable="d"
+      Title="UserPage"
+      Loaded="Page_Loaded">
+
+    <Grid Background="White" Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header and Add Button -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Hodimlar"
+                   FontSize="22"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"
+                   Grid.Column="0"
+                   Margin="15 20 0 0"/>
+
+            <Button Content="Hodim qo'shish"
+                Width="120"
+                Height="35"
+                Style="{StaticResource PrimaryButton}"
+                Grid.Column="1"
+                Click="AddUser_Click"
+                Margin="0 20 15 0"/>
+        </Grid>
+
+        <!-- Table List Header -->
+        <Grid Grid.Row="1" Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Column Titles -->
+            <Grid Grid.Row="0" Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Text="№"
+                    FontWeight="SemiBold"
+                    FontSize="16"
+                    VerticalAlignment="Center"
+                    Margin="5 0 0 0"
+                    HorizontalAlignment="Center"/>
+
+                <TextBlock
+                    Text="Ism"
+                    Grid.Column="1"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Margin="25 0 0 0"/>
+                
+                
+                <TextBlock
+                    Text="Familiya"
+                    Grid.Column="2"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Margin="5 0"/>
+                
+                
+                <TextBlock
+                    Text="Telefon raqam"
+                    Grid.Column="3"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Margin="5 0"/>
+                
+                
+                <TextBlock
+                    Text="Lavozim"
+                    Grid.Column="4"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Margin="5 0"/>
+                
+            </Grid>
+
+            <!-- Table List -->
+            <Grid
+                Grid.Row="1">
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Hidden"
+                    PanningMode="VerticalOnly"
+                    IsManipulationEnabled="True"
+                    CanContentScroll="False">
+                    <StackPanel x:Name="spUsers" Orientation="Vertical"/>
+                </ScrollViewer>
+
+                <Label
+                    Name="EmptyData"
+                    Visibility="Collapsed"
+                    FontSize="16"
+                    Foreground="#a6a6a6"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Content="Ma'lumot topilmadi."/>
+            </Grid>
+            
+        </Grid>
+    </Grid>
+</Page>

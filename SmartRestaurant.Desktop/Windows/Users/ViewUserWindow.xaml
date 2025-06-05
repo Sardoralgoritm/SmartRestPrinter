@@ -1,0 +1,94 @@
+﻿<Window x:Class="SmartRestaurant.Desktop.Windows.Users.ViewUserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmartRestaurant.Desktop.Windows.Users"
+        mc:Ignorable="d"
+        Background="Transparent"
+        WindowState="Maximized"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Loaded="Window_Loaded"
+        Closed="Window_Closed">
+
+    <Border
+        Width="420"
+        Height="450"
+        Background="White"
+        CornerRadius="14"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+
+
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Button
+                Name="Close_Button"
+                Click="Close_Button_Click"
+                Style="{DynamicResource ClosedButton}"/>
+
+            
+            <StackPanel
+                Grid.Row="1"
+                Margin="0 0 0 30"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                
+                <Image
+                    x:Name="userImage"
+                    Width="180"
+                    Height="180"
+                    Margin="0 10"
+                    Stretch="UniformToFill"
+                    ClipToBounds="True"
+                    SnapsToDevicePixels="True"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Source="/Assets/Images/avatardefault_92824.png"
+                    Style="{DynamicResource RoundedImageStyle}" />
+
+                <TextBlock
+                    x:Name="txtFullName"
+                    Text="Sardorbek Saminov"
+                    FontSize="24"
+                    FontWeight="Bold"
+                    TextAlignment="Center"
+                    Margin="0 10"
+                    Foreground="#333"/>
+
+                <TextBlock
+                    x:Name="txtPhone"
+                    Text="+998901234567"
+                    FontSize="18"
+                    TextAlignment="Center"
+                    Margin="0 2"
+                    Foreground="Gray"/>
+
+                <TextBlock
+                    x:Name="txtRole"
+                    Text="Ofitsiant"
+                    FontSize="18"
+                    TextAlignment="Center"
+                    Margin="0 2"
+                    Foreground="DarkSlateGray"/>
+                
+            </StackPanel>
+        </Grid>
+
+        <Border.Effect>
+            <DropShadowEffect
+                
+                BlurRadius="20"
+                ShadowDepth="0"
+                Color="Gray"
+                Opacity="0.6"/>
+            
+        </Border.Effect>
+        
+    </Border>
+</Window>
