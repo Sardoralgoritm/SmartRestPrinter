@@ -5,4 +5,5 @@ namespace SmartRestaurant.BusinessLogic.Services.Tables;
 public class TableSortFilterOption : SortFilterPageOptions
 {
     public Guid? CategoryId { get; set; }
+    public string? Status { get; set; }
 }

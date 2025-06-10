@@ -38,18 +38,18 @@ public partial class SettingsPage : Page
         }
     }
 
-    private void cb_ChefPrinter_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (cb_ChefPrinter.SelectedItem is ComboBoxItem item)
-        {
-            Properties.Settings.Default.ChefProntetName = item.Content.ToString();
-            Properties.Settings.Default.Save();
-        }
-    }
+    //private void cb_ChefPrinter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    //{
+    //    if (cb_ChefPrinter.SelectedItem is ComboBoxItem item)
+    //    {
+    //        Properties.Settings.Default.ChefProntetName = item.Content.ToString();
+    //        Properties.Settings.Default.Save();
+    //    }
+    //}
 
     public void GetPrinters()
     {
-        cb_ChefPrinter.Items.Clear();
+        //cb_ChefPrinter.Items.Clear();
         cb_UserPrinter.Items.Clear();
 
         bool found = false;
@@ -68,7 +68,7 @@ public partial class SettingsPage : Page
                 FontSize = 18
             };
 
-            cb_ChefPrinter.Items.Add(chefItem);
+            //cb_ChefPrinter.Items.Add(chefItem);
             cb_UserPrinter.Items.Add(userItem);
 
             found = true;
@@ -90,7 +90,7 @@ public partial class SettingsPage : Page
                 FontSize = 18
             };
 
-            cb_ChefPrinter.Items.Add(notFound1);
+            //cb_ChefPrinter.Items.Add(notFound1);
             cb_UserPrinter.Items.Add(notFound2);
         }
     }

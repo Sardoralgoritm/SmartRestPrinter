@@ -11,6 +11,11 @@ public static class TableViewListSortFilter
             tables = tables.Where(bd => bd.TableCategoryId == filter.CategoryId);
         }
 
+        if (!string.IsNullOrEmpty(filter.Status))
+        {
+            tables = tables.Where(tb => tb.Status == filter.Status);
+        }
+
         return tables;
     }
 }

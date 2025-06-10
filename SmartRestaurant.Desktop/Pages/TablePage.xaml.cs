@@ -6,6 +6,10 @@ using SmartRestaurant.Desktop.Windows.Tables;
 using SmartRestaurant.Desktop.Windows.Extensions;
 using System.Windows.Media;
 using System.Windows;
+using SmartRestaurant.Desktop.Windows.Categories;
+using static SmartRestaurant.Desktop.Windows.Extensions.NotificationWindow;
+using SmartRestaurant.BusinessLogic.Services.TableCategories.Concrete;
+using SmartRestaurant.Desktop.Components.TableCategory;
 
 namespace SmartRestaurant.Desktop.Pages;
 
@@ -15,13 +19,14 @@ namespace SmartRestaurant.Desktop.Pages;
 public partial class TablePage : Page
 {
     private readonly ITableService _tableService;
+    private readonly ITableCategoryService _tableCategoryService;
 
     public TablePage()
     {
         InitializeComponent();
         _tableService = App.ServiceProvider.GetRequiredService<ITableService>();
+        _tableCategoryService = App.ServiceProvider.GetRequiredService<ITableCategoryService>();
     }
-
 
     private void AddTable_Click(object sender, System.Windows.RoutedEventArgs e)
     {
@@ -43,6 +48,7 @@ public partial class TablePage : Page
     private async void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
     {
         await LoadTables();
+        await LoadCategories();
 
         foreach (var scrollViewer in FindVisualChildren<ScrollViewer>(this))
         {
@@ -84,7 +90,7 @@ public partial class TablePage : Page
         foreach (var table in tables)
         {
             var tableCRUDComponent = new TableCRUDComponent(table.Id);
-            tableCRUDComponent.SetTableData(table.Name, table.Status);
+            tableCRUDComponent.SetTableData(table);
             tableCRUDComponent.TableDeleted += TableCRUDComponent_TableDeleted;
             tableCRUDComponent.TableUpdated += TableCRUDComponent_TableUpdated;
             spTables.Children.Add(tableCRUDComponent);
@@ -112,6 +118,83 @@ public partial class TablePage : Page
         else
         {
             NotificationManager.ShowNotification(NotificationWindow.MessageType.Error, "Stol o'chirishda xatolik yuz berdi.");
+        }
+    }
+
+    private void Add_Category_Click(object sender, RoutedEventArgs e)
+    {
+        var addCategory = new AddTableCategoryWindow();
+        addCategory.CategoryAdded += OnCategoryCreated;
+        addCategory.ShowDialog();
+    }
+
+    public async void OnCategoryCreated(object? sender, EventArgs e)
+    {
+        await LoadCategories();
+
+        if (sender is AddCategory addCategory)
+        {
+            addCategory.CategoryAdded -= OnCategoryCreated;
+        }
+    }
+
+    public async Task LoadCategories()
+    {
+        var categories = await _tableCategoryService.GetAllAsync();
+        foreach (TableCategoryComponent comp in st_Categories.Children.OfType<TableCategoryComponent>())
+        {
+            comp.CategoryDeleted -= CategoryComponent_CategoryDeleted;
+            comp.Dispose();
+        }
+
+        st_Categories.Children.Clear();
+
+        int count = 1;
+        foreach (var category in categories)
+        {
+            var categoryComponent = new TableCategoryComponent(category.Id);
+            categoryComponent.SeedData(category.Name, count++);
+            categoryComponent.CategoryDeleted += CategoryComponent_CategoryDeleted;
+            categoryComponent.CategoryUpdated += CategoryComponent_CategoryUpdated;
+            st_Categories.Children.Add(categoryComponent);
+        }
+    }
+
+    private async void CategoryComponent_CategoryUpdated(object? sender, EventArgs e)
+    {
+        await LoadCategories();
+
+        if (sender is UpdateTableCategoryWindow updateCategory)
+        {
+            updateCategory.CategoryUpdated -= CategoryComponent_CategoryUpdated;
+        }
+    }
+
+    private async void CategoryComponent_CategoryDeleted(object? sender, Guid categoryId)
+    {
+        var category = await _tableCategoryService.GetByIdAsync(categoryId);
+
+        if (category == null)
+        {
+            NotificationManager.ShowNotification(NotificationWindow.MessageType.Error,
+                "Kategoriya topilmadi");
+            return;
+        }
+
+        var res = await _tableCategoryService.DeleteAsync(categoryId);
+        if (res)
+        {
+            NotificationManager.ShowNotification(
+                MessageType.Success,
+                $"Kategoriya muvaffaqiyatli o'chirildi.",
+                NotificationPosition.TopCenter,
+                3000);
+            await LoadCategories();
+        }
+        else
+        {
+            NotificationManager.ShowNotification(NotificationWindow.MessageType.Error,
+                "Kategoriya o'chirishda xatolik yuz berdi");
         }
     }
 }

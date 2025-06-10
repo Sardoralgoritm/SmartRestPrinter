@@ -10,35 +10,30 @@
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Title -->
             <RowDefinition Height="Auto"/>
-            <!-- Products Title -->
             <RowDefinition Height="Auto"/>
-            <!-- Product Header -->
             <RowDefinition Height="2*"/>
-            <!-- Products List -->
             <RowDefinition Height="Auto"/>
-            <!-- Divider -->
             <RowDefinition Height="Auto"/>
-            <!-- Category Title -->
             <RowDefinition Height="Auto"/>
-            <!-- Category Header -->
             <RowDefinition Height="2*"/>
-            <!-- Categories List -->
         </Grid.RowDefinitions>
 
-        <!-- 🟢 Page Title and Buttons -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
+        <Grid
+            Grid.Row="0"
+            Margin="0,0,0,20">
+    
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Menuni boshqarish"
-                   FontSize="24"
-                   FontWeight="Bold"
-                   VerticalAlignment="Center"/>
+            <TextBlock
+                Text="Menuni boshqarish"
+                FontSize="24"
+                FontWeight="Bold"
+                VerticalAlignment="Center"/>
 
             <TextBox
                 Grid.Column="1"
@@ -70,15 +65,17 @@
             </StackPanel>
         </Grid>
 
-        <!-- 🟩 Mahsulotlar sarlavha -->
-        <TextBlock Grid.Row="1"
-               Text="Mahsulotlar"
-               FontSize="20"
-               FontWeight="Bold"
-               Margin="0,0,0,8"/>
+        <TextBlock
+            Grid.Row="1"
+            Text="Mahsulotlar"
+            FontSize="20"
+            FontWeight="Bold"
+            Margin="0,0,0,8"/>
 
-        <!-- 📋 Product ustunlari -->
-        <Grid Grid.Row="2" Margin="5,0,25, 10">
+        <Grid
+            Grid.Row="2"
+            Margin="5,0,25, 10">
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30"/>
                 <ColumnDefinition Width="2*"/>
@@ -88,10 +85,34 @@
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="№" FontWeight="SemiBold" FontSize="16" VerticalAlignment="Center" Margin="5 0 0 0" HorizontalAlignment="Center"/>
-            <TextBlock Text="Nomi" Grid.Column="1" FontWeight="SemiBold" FontSize="16" Margin="25 0 0 0"/>
-            <TextBlock Text="Narxi" Grid.Column="2" FontWeight="SemiBold" FontSize="16" Margin="5 0 0 0" />
-            <TextBlock Text="Kategoriyasi" Grid.Column="3" FontWeight="SemiBold" FontSize="16"/>
+            <TextBlock
+                Text="№"
+                FontWeight="SemiBold"
+                FontSize="16"
+                VerticalAlignment="Center"
+                Margin="5 0 0 0"
+                HorizontalAlignment="Center"/>
+            
+            <TextBlock
+                Text="Nomi"
+                Grid.Column="1"
+                FontWeight="SemiBold"
+                FontSize="16"
+                Margin="25 0 0 0"/>
+            
+            <TextBlock
+                Text="Narxi"
+                Grid.Column="2"
+                FontWeight="SemiBold"
+                FontSize="16"
+                Margin="5 0 0 0" />
+            
+            <TextBlock
+                Text="Kategoriyasi"
+                Grid.Column="3"
+                FontWeight="SemiBold"
+                FontSize="16"/>
+            
         </Grid>
 
         <Grid
@@ -128,7 +149,6 @@
 
         </Grid>
 
-        <!-- 🧍 Divider -->
         <Border 
             Grid.Row="4"
             Height="2"
@@ -136,12 +156,12 @@
             CornerRadius="1"
             Margin="0,20"/>
 
-        <!-- 🟨 Kategoriyalar sarlavha -->
-        <TextBlock Grid.Row="5"
-               Text="Kategoriyalar"
-               FontSize="20"
-               FontWeight="Bold"
-               Margin="0,10,0,8"/>
+        <TextBlock
+            Grid.Row="5"
+            Text="Kategoriyalar"
+            FontSize="20"
+            FontWeight="Bold"
+            Margin="0,10,0,8"/>
 
         <Grid
             Grid.Row="6" 
@@ -162,17 +182,28 @@
                 Margin="5 0 0 0"
                 HorizontalAlignment="Center"/>
             
-            <TextBlock Grid.Column="1" Text="Kategoriya nomi" FontWeight="SemiBold" FontSize="16" Margin="25 0 0 0"/>
+            <TextBlock
+                Grid.Column="1"
+                Text="Kategoriya nomi"
+                FontWeight="SemiBold"
+                FontSize="16"
+                Margin="25 0 0 0"/>
+            
         </Grid>
 
-        <ScrollViewer Grid.Row="7"
-                  VerticalScrollBarVisibility="Hidden"
-                  PanningMode="VerticalOnly"
-                  IsManipulationEnabled="True"
-                  CanContentScroll="False"
-                  PanningDeceleration="0.001"
-                  PanningRatio="1">
-            <StackPanel x:Name="st_Categories" Orientation="Vertical"/>
+        <ScrollViewer
+            Grid.Row="7"
+            VerticalScrollBarVisibility="Hidden"
+            PanningMode="VerticalOnly"
+            IsManipulationEnabled="True"
+            CanContentScroll="False"
+            PanningDeceleration="0.001"
+            PanningRatio="1">
+            
+            <StackPanel
+                x:Name="st_Categories"
+                Orientation="Vertical"/>
+            
         </ScrollViewer>
     </Grid>
 

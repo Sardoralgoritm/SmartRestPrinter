@@ -18,6 +18,7 @@ public partial class ColculatorWindow : Window
 {
     public double OrderPrice;
     public event EventHandler<string?>? TakenAwayChanged;
+    public event EventHandler? CheckPrinted;
 
     bool _isCorrect = false;
     public ColculatorWindow()
@@ -197,6 +198,6 @@ public partial class ColculatorWindow : Window
 
     private void btn_check_Click(object sender, RoutedEventArgs e)
     {
-
+        CheckPrinted?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ESC_POS_USB_NET.Printer;
 using SmartRestaurant.BusinessLogic.Services.Orders.DTOs;
+using SmartRestaurant.Desktop.Helpers.Session;
 using SmartRestaurant.Desktop.Windows.Extensions;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -59,6 +60,75 @@ public class PrintService : IDisposable
         printer.NormalWidth();
         printer.Append($"Buyurtma vaqti:       " + DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
 
+        printer.Append("\n");
+
+        if (!string.IsNullOrEmpty(printerName) && IsPrinterAvailable(printerName))
+        {
+            printer.FullPaperCut();
+            printer.PrintDocument();
+        }
+        else
+            NotificationManager.ShowNotification(MessageType.Error, "Oshpaz uchun printer tanlanmagan.");
+    }
+
+    public void PrintCancelledItemChek(string tableName, string productName, int cancelledQuantity, double remainingQuantity, string printerName)
+    {
+        printer = new Printer(printerName, "UTF-8");
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+        printer.AlignCenter();
+        printer.Append(new byte[] { 0x1D, 0x21, 0x33 });
+        printer.BoldMode("*** BEKOR QILINDI ***");
+        printer.Append("\n");
+        printer.Separator();
+
+        // Stol nomi
+        printer.AlignCenter();
+        printer.DoubleWidth2();
+        printer.BoldMode(tableName);
+        printer.Append("\n");
+        printer.Separator();
+
+        // Bekor qilingan mahsulot
+        printer.AlignLeft();
+        printer.DoubleWidth2();
+        printer.BoldMode("❌ BEKOR QILINDI:");
+        printer.Append("\n");
+        printer.Append($"{productName}");
+        printer.Append("\n");
+        printer.BoldMode($"Miqdori: {cancelledQuantity} ta");
+        printer.Append("\n");
+        printer.Separator();
+
+        // Qolgan miqdor (agar bor bo'lsa)
+        if (remainingQuantity > 0)
+        {
+            printer.AlignLeft();
+            printer.DoubleWidth2();
+            printer.BoldMode("✅ QOLGAN:");
+            printer.Append("\n");
+            printer.Append($"{productName}");
+            printer.Append("\n");
+            printer.BoldMode($"Miqdori: {remainingQuantity} ta");
+            printer.Append("\n");
+            printer.Separator();
+        }
+        else
+        {
+            printer.AlignCenter();
+            printer.DoubleWidth2();
+            printer.BoldMode("BUTUNLAY BEKOR QILINDI!");
+            printer.Append("\n");
+            printer.Separator();
+        }
+
+        // Vaqt va qo'shimcha ma'lumotlar
+        printer.Append("\n");
+        printer.AlignLeft();
+        printer.NormalWidth();
+        printer.Append($"Bekor qilish vaqti: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        printer.Append("\n");
+        printer.Append($"Kassir: {SessionManager.FirstName}");
         printer.Append("\n");
 
         if (!string.IsNullOrEmpty(printerName) && IsPrinterAvailable(printerName))

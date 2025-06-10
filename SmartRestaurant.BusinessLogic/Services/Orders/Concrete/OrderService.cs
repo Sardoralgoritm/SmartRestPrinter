@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SmartRestaurant.BusinessLogic.Extentions;
 using SmartRestaurant.BusinessLogic.Services.OrderItems.DTOs;
 using SmartRestaurant.BusinessLogic.Services.Orders.DTOs;
@@ -299,5 +300,36 @@ public class OrderService : IOrderService
                     .OrderByDescending(i => i.Quantity).AsPagedResult(option);
 
         return result;
+    }
+
+    public async Task<bool> ChangeTableIdAsync(Guid orderId, Guid oldTableId, Guid newTableId)
+    {
+        using var transaction = await _unitOfWork.BeginTransactionAsync();
+
+        try
+        {
+            var exitingOrder = await _unitOfWork.Orders.GetByIdAsync(orderId);
+            if (exitingOrder == null) return false;
+
+            exitingOrder.TableId = newTableId;
+            await _unitOfWork.Orders.UpdateAsync(exitingOrder);
+
+            var exitingTable = await _unitOfWork.Tables.GetByIdAsync(oldTableId);
+            if (exitingTable is null) return false;
+            exitingTable.Status = TableStatus.Free;
+
+            var newTable = await _unitOfWork.Tables.GetByIdAsync(newTableId);
+            if (newTable is null) return false;
+            newTable.Status = TableStatus.Busy;
+
+            var result = await _unitOfWork.SaveChangesAsync();
+            transaction.Commit();
+            return result > 0;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            return false;
+        }
     }
 }

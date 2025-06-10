@@ -12,6 +12,7 @@ public interface IOrderService
     Task<(bool, int)> CreateAsync(AddOrderDto dto);
     Task<bool> DeleteAsync(Guid id);
     Task<bool> UpdateTotalPrice(Guid orderId, double totalPrice);
+    Task<bool> ChangeTableIdAsync(Guid orderId, Guid oldTableId, Guid newTableId);
     Task<OrderDto?> GetOpenOrderByTableId(Guid tableId);
     Task<bool> CloseOrderAndFreeTable(EditOrderDto orderDto, Guid tableId);
     Task<bool> DeleteOrderAndFreeTableAsync(Guid OrderId, Guid tableId);

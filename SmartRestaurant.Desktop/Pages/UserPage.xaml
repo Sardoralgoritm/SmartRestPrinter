@@ -29,7 +29,6 @@
                    Margin="15 20 0 0"/>
 
             <Button Content="Hodim qo'shish"
-                Width="120"
                 Height="35"
                 Style="{StaticResource PrimaryButton}"
                 Grid.Column="1"

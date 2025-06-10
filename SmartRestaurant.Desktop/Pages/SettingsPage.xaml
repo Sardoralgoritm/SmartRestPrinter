@@ -27,27 +27,11 @@
                 FontSize="20"
                 MaxDropDownHeight="120"
                 SelectionChanged="cb_UserPrinter_SelectionChanged">
-                
-            </ComboBox>
-
-            <TextBlock
-                Margin="0 50 0 20"
-                FontSize="25"
-                FontWeight="SemiBold"
-                Text="Oshpaz printerini tanlash :"/>
-
-            <ComboBox
-                Name="cb_ChefPrinter"
-                Width="400"
-                Height="40"
-                FontSize="20"
-                MaxDropDownHeight="120"
-                SelectionChanged="cb_ChefPrinter_SelectionChanged">
 
             </ComboBox>
 
             <TextBlock
-                Margin="0 50 0 20"
+                Margin="0 30 0 20"
                 FontSize="25"
                 FontWeight="SemiBold"
                 Text="Chek telefon raqami :"/>

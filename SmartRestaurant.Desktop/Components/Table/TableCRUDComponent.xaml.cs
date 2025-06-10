@@ -1,4 +1,5 @@
-﻿using SmartRestaurant.Desktop.Windows.Extensions;
+﻿using SmartRestaurant.BusinessLogic.Services.Tables.DTOs;
+using SmartRestaurant.Desktop.Windows.Extensions;
 using SmartRestaurant.Desktop.Windows.Tables;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,10 +45,11 @@ namespace SmartRestaurant.Desktop.Components
             }   
         }
 
-        public void SetTableData(string tableName, string tableStatus)
+        public void SetTableData(TableDto table)
         {
-            txtNumber.Text = tableName;
-            txtStatus.Text = tableStatus;
+            txtNumber.Text = table.Name;
+            txtStatus.Text = table.Status;
+            txtCategoryName.Text = table.CategoryName;
         }
     }
 }

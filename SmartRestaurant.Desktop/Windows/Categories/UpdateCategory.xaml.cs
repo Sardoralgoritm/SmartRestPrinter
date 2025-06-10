@@ -45,6 +45,12 @@ public partial class UpdateCategory : Window
 
     private async void Update_Click(object sender, RoutedEventArgs e)
     {
+        if (string.IsNullOrEmpty(txtCategoryName.Text))
+        {
+            NotificationManager.ShowNotification(NotificationWindow.MessageType.Warning, "Iltimos, kategoriya nomini kiriting.");
+            return;
+        }
+
         var updatedCategory = new CategoryDto
         {
             Id = _categoryId,

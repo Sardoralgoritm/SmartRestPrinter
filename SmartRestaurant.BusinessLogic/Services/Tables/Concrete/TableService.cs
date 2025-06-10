@@ -19,6 +19,7 @@ public class TableService : ITableService
     {
         var tables = await _unitOfWork.Tables
                                         .GetAll()
+                                        .Include(t => t.TableCategory)
                                         .Where(t => !t.Name.ToLower().StartsWith("takeaway"))
                                         .SortFilter(option)
                                         .ToListAsync();

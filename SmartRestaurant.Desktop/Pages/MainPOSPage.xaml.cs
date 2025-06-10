@@ -5,6 +5,7 @@ using SmartRestaurant.BusinessLogic.Services.OrderItems.Concrete;
 using SmartRestaurant.BusinessLogic.Services.OrderItems.DTOs;
 using SmartRestaurant.BusinessLogic.Services.Orders.Concrete;
 using SmartRestaurant.BusinessLogic.Services.Orders.DTOs;
+using SmartRestaurant.BusinessLogic.Services.Printers.Concrete;
 using SmartRestaurant.BusinessLogic.Services.Products.Concrete;
 using SmartRestaurant.BusinessLogic.Services.Products.DTOs;
 using SmartRestaurant.BusinessLogic.Services.TableCategories.Concrete;
@@ -72,13 +73,7 @@ public partial class MainPOSPage : Page
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        await LoadCategoriesAsync();
-
-        await LoadTableCategoriesAsync();
-
-        lblAdditional.Visibility = Visibility.Visible;
-
-        user_name.Text = SessionManager.FirstName + " | " + SessionManager.Role;
+        await RefreshPageDataAsync();
     }
 
     public void AddOrderItem(ProductDto product)
@@ -137,6 +132,7 @@ public partial class MainPOSPage : Page
         if (_newItems.Count > 0)
         {
             btnbooking.Visibility = Visibility.Collapsed;
+            transfer.Visibility = Visibility.Collapsed;
         }
 
         if (_selectedTable != null)
@@ -191,6 +187,9 @@ public partial class MainPOSPage : Page
         if (_previousItems.FirstOrDefault(x => x.Id == orderItemId) is { } item)
         {
             item.Quantity--;
+            var printer = new PrintService();
+            printer.PrintCancelledItemChek(order!.TableName, item.ProductName, 1, item.Quantity, item.PrinterName);
+
             if (item.Quantity <= 0)
             {
                 _previousItems.Remove(item);
@@ -271,7 +270,6 @@ public partial class MainPOSPage : Page
         {
             firstRb.IsChecked = true;
         }
-
     }
 
     private async Task LoadCategoriesAsync()
@@ -531,6 +529,7 @@ public partial class MainPOSPage : Page
             btnbooking.Visibility = Visibility.Collapsed;
             ScrollSpNewOredrs.MaxHeight = 200;
             btnReSendToKitchen.Visibility = Visibility.Visible;
+            transfer.Visibility = Visibility.Visible;
             lblAdditional.Text = "Qo'shimcha mahsulotlar";
             st_queue.Visibility = Visibility.Visible;
         }
@@ -821,9 +820,35 @@ public partial class MainPOSPage : Page
 
         ColculatorWindow colculatorWindow = new ColculatorWindow();
         colculatorWindow.TakenAwayChanged += ColculatorWindow_TakenAwayChanged;
+        colculatorWindow.CheckPrinted += CheckPrint;
         colculatorWindow.OrderPrice = TotalPrice;
         colculatorWindow.ShowDialog();
         colculatorWindow.TakenAwayChanged -= ColculatorWindow_TakenAwayChanged;
+    }
+
+    private async void CheckPrint(object? sender, EventArgs e)
+    {
+        if (_selectedTable == null)
+        {
+            NotificationManager.ShowNotification(
+                NotificationWindow.MessageType.Warning,
+                "Stol tanlanmagan!",
+                NotificationWindow.NotificationPosition.TopRight);
+            return;
+        }
+
+        var openOrder = await _orderService.GetOpenOrderByTableId(_selectedTable.Id);
+        if (openOrder is null)
+        {
+            NotificationManager.ShowNotification(
+                NotificationWindow.MessageType.Error,
+                "Ushbu stol uchun ochiq buyurtma topilmadi!",
+                NotificationWindow.NotificationPosition.TopRight);
+            return;
+        }
+
+        PrintService printService = new PrintService();
+        printService.PrintUserChek(openOrder, openOrder.TotalPrice, TotalPrice);
     }
 
     private async void ColculatorWindow_TakenAwayChanged(object? sender, string? password)
@@ -991,10 +1016,10 @@ public partial class MainPOSPage : Page
                     );
                 }
 
-                if (updateOrder.Status != OrderStatus.Free)
-                {
-                    printService.PrintUserChek(openOrder, openOrder.TotalPrice, PaymentPrice);
-                }
+                //if (updateOrder.Status != OrderStatus.Free)
+                //{
+                //    printService.PrintUserChek(openOrder, openOrder.TotalPrice, PaymentPrice);
+                //}
 
                 NotificationManager.ShowNotification(
                     NotificationWindow.MessageType.Success,
@@ -1211,8 +1236,49 @@ public partial class MainPOSPage : Page
         }
     }
 
-    private void Page_Loaded_1(object sender, RoutedEventArgs e)
+    private void transfer_Click(object sender, RoutedEventArgs e)
     {
+        if (_selectedTable == null)
+        {
+            NotificationManager.ShowNotification(
+                NotificationWindow.MessageType.Error,
+                "Stol tanlanmagan!",
+                NotificationWindow.NotificationPosition.TopRight);
+            return;
+        }
 
+        var table = new TableTransferWindow(_selectedTable);
+        table.tableIdChanged += transferClicked;
+        table.ShowDialog();
+    }
+
+    private async void transferClicked(object? sender, Guid newTableId)
+    {
+        var order = await _orderService.GetOpenOrderByTableId(_selectedTable!.Id);
+        if (order == null)
+        {
+            NotificationManager.ShowNotification(NotificationWindow.MessageType.Error, "Bunday buyurtma topilmadi!");
+            return;
+        }
+
+        var result = await _orderService.ChangeTableIdAsync(order.Id, _selectedTable.Id, newTableId);
+
+        if (result)
+        {
+            NotificationManager.ShowNotification(NotificationWindow.MessageType.Success, "Buyurtma boshqa stolga ko'chirildi!");
+        }
+
+        await RefreshPageDataAsync();
+    }
+
+    private async Task RefreshPageDataAsync()
+    {
+        await LoadCategoriesAsync();
+
+        await LoadTableCategoriesAsync();
+
+        lblAdditional.Visibility = Visibility.Visible;
+
+        user_name.Text = SessionManager.FirstName + " | " + SessionManager.Role;
     }
 }

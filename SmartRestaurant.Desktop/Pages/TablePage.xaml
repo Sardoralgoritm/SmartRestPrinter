@@ -7,63 +7,170 @@
       Title="TablePage"
       Loaded="Page_Loaded">
 
-    <Grid Background="White" Margin="20">
+    <Grid
+        Background="White"
+        Margin="20">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header and Add Button -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
+        <Grid
+            Grid.Row="0"
+            Margin="0,0,0,20">
+            
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Stollar"
-                       FontSize="22"
-                       FontWeight="Bold"
-                       VerticalAlignment="Center"
-                       Grid.Column="0"
-                       Margin="15 20 0 0"/>
+            <TextBlock
+                Text="Stollar"
+                FontSize="22"
+                FontWeight="Bold"
+                VerticalAlignment="Center"
+                Grid.Column="0"
+                Margin="15 20 0 0"/>
 
-            <Button Content="Stol qo'shish"
-                    Width="120"
+            <StackPanel 
+                Orientation="Horizontal" 
+                Grid.Column="2" 
+                HorizontalAlignment="Right">
+
+                <Button
+                    Content="Stol qo'shish"
                     Height="35"
                     Style="{StaticResource PrimaryButton}"
                     Grid.Column="1"
                     Click="AddTable_Click"
-                    Margin="0 20 15 0"/>
+                    Margin="0 0 15 0"/>
+
+                <Button 
+                    Content="Kategoriya qo'shish"
+                    Grid.Column="2"
+                    Style="{StaticResource PrimaryButton}"
+                    Click="Add_Category_Click"
+                    Height="35"/>
+            </StackPanel>
+
+                
         </Grid>
 
-        <!-- Table List Header -->
-        <Grid Grid.Row="1" Margin="0,0,0,10">
+        <Grid
+            Grid.Row="1"
+            Margin="0,0,0,10">
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Column Titles -->
-            <Grid Grid.Row="0" Margin="0,0,0,8">
+            <Grid
+                Grid.Row="0"
+                Margin="0,0,0,8">
+                
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Stol nomi" FontSize="16" FontWeight="SemiBold" Margin="10 0 0 0"/>
-                <TextBlock Text="Xolati" Grid.Column="1" FontSize="16" FontWeight="SemiBold" Margin="0 0 30 0"/>
+                <TextBlock
+                    Text="Stol nomi"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Margin="10 0 0 0"/>
+
+                <TextBlock
+                    Grid.Column="1"
+                    Text="Stol kategoriyasi"
+                    FontSize="16"
+                    FontWeight="SemiBold"/>
+
+                <TextBlock
+                    Text="Xolati"
+                    Grid.Column="2"
+                    FontSize="16"
+                    FontWeight="SemiBold"/>
+                
             </Grid>
 
-            <!-- Table List -->
-            <ScrollViewer Grid.Row="1"
-                          VerticalScrollBarVisibility="Hidden"
-                          PanningMode="VerticalOnly"
-                          IsManipulationEnabled="True"
-                          CanContentScroll="False">
-                <StackPanel x:Name="spTables" Orientation="Vertical"/>
+            <ScrollViewer
+                Grid.Row="1"
+                VerticalScrollBarVisibility="Hidden"
+                PanningMode="VerticalOnly"
+                IsManipulationEnabled="True"
+                CanContentScroll="False">
+                <StackPanel
+                    x:Name="spTables"
+                    Orientation="Vertical"/>
+                
             </ScrollViewer>
         </Grid>
+
+        <Border 
+            Grid.Row="2"
+            Height="2"
+            Background="#9E9E9E"
+            CornerRadius="1"
+            Margin="0,20"/>
+
+        <TextBlock
+            Grid.Row="3"
+            Text="Kategoriyalar"
+            FontSize="20"
+            FontWeight="Bold"
+            Margin="15,10,0,8"/>
+
+        <Grid
+            Grid.Row="4" 
+            Margin="5,15,25,10">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Text="№"
+                FontWeight="SemiBold"
+                FontSize="16"
+                VerticalAlignment="Center"
+                Margin="5 0 0 0"
+                HorizontalAlignment="Center"/>
+
+            <TextBlock
+                Grid.Column="1"
+                Text="Kategoriya nomi"
+                FontWeight="SemiBold"
+                FontSize="16"
+                Margin="25 0 0 0"/>
+
+        </Grid>
+
+        <ScrollViewer
+            Grid.Row="5"
+            VerticalScrollBarVisibility="Hidden"
+            PanningMode="VerticalOnly"
+            IsManipulationEnabled="True"
+            CanContentScroll="False"
+            PanningDeceleration="0.001"
+            PanningRatio="1">
+
+            <StackPanel
+                x:Name="st_Categories"
+                Orientation="Vertical"/>
+
+        </ScrollViewer>
     </Grid>
 </Page>

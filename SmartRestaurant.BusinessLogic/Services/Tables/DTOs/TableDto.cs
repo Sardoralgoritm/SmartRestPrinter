@@ -8,6 +8,7 @@ public class TableDto
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Status { get; set; } = TableStatus.Free;
+    public string CategoryName { get; set; } = string.Empty;
 
     public static implicit operator TableDto(Table entity)
     {
@@ -15,7 +16,8 @@ public class TableDto
         {
             Id = entity.Id,
             Name = entity.Name,
-            Status = entity.Status
+            Status = entity.Status,
+            CategoryName = entity.TableCategory!.Name
         };
     }
 }
