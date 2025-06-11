@@ -62,7 +62,7 @@ public class PrintService : IDisposable
 
         printer.Append("\n");
 
-        if (!string.IsNullOrEmpty(printerName) && IsPrinterAvailable(printerName))
+        if (!string.IsNullOrEmpty(printerName))
         {
             printer.FullPaperCut();
             printer.PrintDocument();
@@ -77,8 +77,8 @@ public class PrintService : IDisposable
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         printer.AlignCenter();
-        printer.Append(new byte[] { 0x1D, 0x21, 0x33 });
-        printer.BoldMode("*** BEKOR QILINDI ***");
+        printer.Append(new byte[] { 0x1D, 0x21, 0x22 });
+        printer.BoldMode("BEKOR QILINDI");
         printer.Append("\n");
         printer.Separator();
 
@@ -131,7 +131,7 @@ public class PrintService : IDisposable
         printer.Append($"Kassir: {SessionManager.FirstName}");
         printer.Append("\n");
 
-        if (!string.IsNullOrEmpty(printerName) && IsPrinterAvailable(printerName))
+        if (!string.IsNullOrEmpty(printerName))
         {
             printer.FullPaperCut();
             printer.PrintDocument();
@@ -142,34 +142,46 @@ public class PrintService : IDisposable
 
     public void PrintUserChek(OrderDto dto, double order_price, double payment_price)
     {
+
         printer = new Printer(USER_PRINTER_NAME, "UTF-8");
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
+        // Logo
         var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"logo.png");
-
         using (var image = new Bitmap(imagePath))
         {
             printer.AlignCenter();
             printer.Image(image);
         }
+
+        // Header bo'limi
         printer.Separator();
-
-
         printer.Append("\n");
         printer.AlignCenter();
         printer.NormalWidth();
-        printer.BoldMode("Manzil:");
-        printer.BoldMode("Urgut krug, SXF binosi, 1-qavat");
+        printer.BoldMode("SMART RESTAURANT");
+        printer.Append("\n");
+        printer.BoldMode("Manzil: Urgut krug, SXF binosi, 1-qavat");
+        printer.Append("\n");
+        printer.BoldMode($"Tel: {PHONE_NUMBER}");
         printer.Append("\n");
         printer.Separator();
-        printer.Append("\n");
-        printer.BoldMode($"Buyurtma uchun tel: {PHONE_NUMBER}");
-        printer.Append("\n");
-        printer.Separator();
+
+        // Buyurtma ma'lumotlari
         printer.Append("\n");
         printer.AlignCenter();
         printer.DoubleWidth2();
         printer.BoldMode(dto.TableName);
+        printer.Append("\n");
+        printer.NormalWidth();
+        printer.Append($"Chek ID: {dto.TransactionId}");
+        printer.Append("\n");
+        printer.Separator();
+
+        // Mahsulotlar ro'yxati
+        printer.Append("\n");
+        printer.AlignLeft();
+        printer.BoldMode("MAHSULOT             MIQDOR   SUMMA");
         printer.Append("\n");
         printer.Separator();
 
@@ -177,57 +189,156 @@ public class PrintService : IDisposable
         foreach (var item in dto.Items)
         {
             c++;
-            string text = $"{item.ProductName}";
-            int strLength = 18 - text.Length;
-            for (int i = 1; i <= strLength; i++)
-            {
-                text += " ";
-            }
-            string temp = $"  {item.Quantity} * ";
-            text += temp;
-            strLength = 1 - temp.Length;
-            for (int i = 0; i < strLength; i++)
-            {
-                text += " ";
-            }
-            text += item.TotalPrice.ToString();
-            printer.AlignLeft();
-            printer.Append(text);
+            string productName = item.ProductName.Length > 18
+                ? item.ProductName.Substring(0, 15) + "..."
+                : item.ProductName;
 
+            string line = string.Format("{0,-18} {1,3} x {2,8:N0}",
+                productName,
+                item.Quantity,
+                item.TotalPrice);
+
+            printer.AlignLeft();
+            printer.Append(line);
             if (dto.Items.Count != c)
             {
                 printer.Append("\n");
             }
         }
 
+        // Hisob-kitob bo'limi
+        printer.Append("\n");
+        printer.Separator();
+        printer.Append("\n");
+        printer.AlignLeft();
+        printer.BoldMode(string.Format("{0,-20} {1,12:N0}", "JAMI SUMMA:", order_price));
+        printer.Append("\n");
+        printer.Append(string.Format("{0,-20} {1,12:N0}", "Berilgan summa:", payment_price));
+        printer.Append("\n");
+        printer.BoldMode(string.Format("{0,-20} {1,12:N0}", "QAYTIM:", payment_price - order_price));
+        printer.Append("\n");
         printer.Separator();
 
+        // Kassir va vaqt ma'lumotlari
         printer.Append("\n");
         printer.AlignLeft();
         printer.NormalWidth();
-        printer.Append($"Jami summa:       {order_price}");
-        printer.Append($"Berilgan summa:   {payment_price}");
-        printer.Append($"Qaytim summasi:   {payment_price - order_price}");
+        printer.Append($"Sana: {DateTime.Now:yyyy-MM-dd HH:mm}");
         printer.Append("\n");
-        printer.Append($"Sana:  " + DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
-        printer.Append("ID:   " + dto.TransactionId);
-
+        printer.BoldMode($"Kassir: {SessionManager.FirstName} {SessionManager.LastName}");
         printer.Append("\n");
+        printer.Separator();
 
+        // Footer
+        printer.Append("\n");
         printer.AlignCenter();
-        printer.Append("Smart Partners");
-        printer.Append("Biz bilan biznesingizni avtomatlashtiring.");
-        printer.Append("Murojat uchun tel: +998996661132");
+        printer.BoldMode("SMART PARTNERS");
+        printer.Append("\n");
+        printer.Append("Biz bilan biznesingizni avtomatlashtiring");
+        printer.Append("\n");
+        printer.BoldMode("Tel: +998 99 666 11 32");
+        printer.Append("\n");
+        printer.Append("Rahmat! Yana kutib qolamiz!");
         printer.Append("\n");
         printer.Append("\n");
 
-        if (!string.IsNullOrEmpty(USER_PRINTER_NAME) && IsPrinterAvailable(USER_PRINTER_NAME))
+        if (!string.IsNullOrEmpty(USER_PRINTER_NAME))
         {
             printer.FullPaperCut();
             printer.PrintDocument();
         }
         else
             NotificationManager.ShowNotification(MessageType.Error, "Kassa uchun printer tanlanmagan.");
+
+
+        //printer = new Printer(USER_PRINTER_NAME, "UTF-8");
+        //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+        //var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"logo.png");
+
+        //using (var image = new Bitmap(imagePath))
+        //{
+        //    printer.AlignCenter();
+        //    printer.Image(image);
+        //}
+        //printer.Separator();
+
+
+        //printer.Append("\n");
+        //printer.AlignCenter();
+        //printer.NormalWidth();
+        //printer.BoldMode("Manzil:");
+        //printer.BoldMode("Urgut krug, SXF binosi, 1-qavat");
+        //printer.Append("\n");
+        //printer.Separator();
+        //printer.Append("\n");
+        //printer.BoldMode($"Buyurtma uchun tel: {PHONE_NUMBER}");
+        //printer.Append("\n");
+        //printer.Separator();
+        //printer.Append("\n");
+
+
+        //printer.AlignCenter();
+        //printer.DoubleWidth2();
+        //printer.BoldMode(dto.TableName);
+        //printer.Append("\n");
+        //printer.Separator();
+
+        //int c = 0;
+        //foreach (var item in dto.Items)
+        //{
+        //    c++;
+        //    string text = $"{item.ProductName}";
+        //    int strLength = 18 - text.Length;
+        //    for (int i = 1; i <= strLength; i++)
+        //    {
+        //        text += " ";
+        //    }
+        //    string temp = $"  {item.Quantity} * ";
+        //    text += temp;
+        //    strLength = 1 - temp.Length;
+        //    for (int i = 0; i < strLength; i++)
+        //    {
+        //        text += " ";
+        //    }
+        //    text += item.TotalPrice.ToString();
+        //    printer.AlignLeft();
+        //    printer.Append(text);
+
+        //    if (dto.Items.Count != c)
+        //    {
+        //        printer.Append("\n");
+        //    }
+        //}
+
+        //printer.Separator();
+
+        //printer.Append("\n");
+        //printer.AlignLeft();
+        //printer.NormalWidth();
+        //printer.Append($"Jami summa:       {order_price}");
+        //printer.Append($"Berilgan summa:   {payment_price}");
+        //printer.Append($"Qaytim summasi:   {payment_price - order_price}");
+        //printer.Append("\n");
+        //printer.Append($"Sana:  " + DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
+        //printer.Append("ID:   " + dto.TransactionId);
+
+        //printer.Append("\n");
+
+        //printer.AlignCenter();
+        //printer.Append("Smart Partners");
+        //printer.Append("Biz bilan biznesingizni avtomatlashtiring.");
+        //printer.Append("Murojat uchun tel: +998996661132");
+        //printer.Append("\n");
+        //printer.Append("\n");
+
+        //if (!string.IsNullOrEmpty(USER_PRINTER_NAME))
+        //{
+        //    printer.FullPaperCut();
+        //    printer.PrintDocument();
+        //}
+        //else
+        //    NotificationManager.ShowNotification(MessageType.Error, "Kassa uchun printer tanlanmagan.");
     }
 
     public void Dispose()
@@ -254,41 +365,12 @@ public class PrintService : IDisposable
         printer.Append("Chekni barabanga tashlang!");
         printer.Append("\n\n");
 
-        if (!string.IsNullOrEmpty(USER_PRINTER_NAME) && IsPrinterAvailable(USER_PRINTER_NAME))
+        if (!string.IsNullOrEmpty(USER_PRINTER_NAME))
         {
             printer.FullPaperCut();
             printer.PrintDocument();
         }
         else
             NotificationManager.ShowNotification(MessageType.Error, "Kassa uchun printer tanlanmagan.");
-    }
-
-    private bool IsPrinterAvailable(string printerName)
-    {
-        try
-        {
-            string query = $"SELECT * FROM Win32_Printer WHERE Name = '{printerName.Replace("\\", "\\\\")}'";
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
-            {
-                var printers = searcher.Get();
-                foreach (ManagementObject printer in printers)
-                {
-                    // Printer holatini tekshirish
-                    var status = printer["PrinterStatus"];
-                    var state = printer["PrinterState"];
-
-                    // Agar printer offline yoki xato holatda bo'lsa
-                    if (status != null && (int)status == 7) // Offline
-                        return false;
-
-                    return true;
-                }
-            }
-            return false;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
     }
 }

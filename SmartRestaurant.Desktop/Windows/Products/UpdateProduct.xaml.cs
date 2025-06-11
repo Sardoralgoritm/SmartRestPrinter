@@ -6,6 +6,8 @@ using SmartRestaurant.BusinessLogic.Services.Products.Concrete;
 using SmartRestaurant.BusinessLogic.Services.Products.DTOs;
 using SmartRestaurant.Desktop.Windows.BlurWindow;
 using SmartRestaurant.Desktop.Windows.Extensions;
+using SmartRestaurant.Domain.Entities;
+using System.Drawing.Printing;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -103,15 +105,13 @@ public partial class UpdateProduct : Window
                 Price = double.Parse(txtPrice.Text),
                 CategoryId = (Guid)cmbCategory.SelectedValue,
                 ImagePath = imagePath,
-                //IsSendKitchen = isSendKitchenCheckBox.IsChecked ?? false 
+                PrinterName = (cmbPrinter.SelectedItem as ComboBoxItem)?.Content.ToString() ?? "",
             };
 
-            // Yangilash amaliyotini bajarish
             var isSuccess = await _productService.UpdateAsync(updatedProduct);
 
             if (isSuccess)
             {
-                // Ma'lumotlar omboridagi yangilash muvaffaqiyatli bo'lgandan keyin eski rasmni o'chirish
                 if (oldImageFullPath != null && File.Exists(oldImageFullPath))
                 {
                     try
@@ -170,6 +170,12 @@ public partial class UpdateProduct : Window
         if (cmbCategory.SelectedItem == null)
         {
             NotificationManager.ShowNotification(NotificationWindow.MessageType.Warning, "Iltimos toifani tanlang.");
+            return false;
+        }
+
+        if (cmbPrinter.SelectedItem == null)
+        {
+            NotificationManager.ShowNotification(NotificationWindow.MessageType.Warning, "Iltimos printerni tanlang.");
             return false;
         }
 
@@ -296,8 +302,51 @@ public partial class UpdateProduct : Window
         cmbCategory.DisplayMemberPath = "Name";
         cmbCategory.SelectedValuePath = "Id";
         cmbCategory.SelectedValue = prod.CategoryId;
-        //isSendKitchenCheckBox.IsChecked = prod.IsSendKitchen;
+        SeedPrinters();
+        SelectPrinterByName(prod.PrinterName);
         SetproductImage(prod.ImagePath);
+    }
+
+    private void SelectPrinterByName(string printerName)
+    {
+        if (string.IsNullOrEmpty(printerName) || printerName == "Printersiz")
+        {
+            cmbPrinter.SelectedIndex = 0;
+            return;
+        }
+
+        foreach (ComboBoxItem item in cmbPrinter.Items)
+        {
+            if (item.Content.ToString() == printerName)
+            {
+                cmbPrinter.SelectedItem = item;
+                return;
+            }
+        }
+
+        cmbPrinter.SelectedIndex = 0;
+    }
+
+    private void SeedPrinters()
+    {
+        cmbPrinter.Items.Clear();
+
+        ComboBoxItem noPrinterItem = new ComboBoxItem
+        {
+            Content = "Printersiz", // yoki "Chop etilmaydi"
+            FontSize = 18
+        };
+        cmbPrinter.Items.Add(noPrinterItem);
+
+        foreach (string printerName in PrinterSettings.InstalledPrinters)
+        {
+            ComboBoxItem item = new ComboBoxItem
+            {
+                Content = printerName,
+                FontSize = 18
+            };
+            cmbPrinter.Items.Add(item);
+        }
     }
 
     public void SetproductImage(string? imagePath)

@@ -348,7 +348,7 @@ public partial class MainPOSPage : Page
             spCategoryButtons.Children.Add(rb);
         }
 
-        // Dastlab birinchi kategoriya tanlansin
+
         if (spCategoryButtons.Children.Count > 0 && spCategoryButtons.Children[0] is RadioButton firstRb)
         {
             firstRb.IsChecked = true;
@@ -483,6 +483,7 @@ public partial class MainPOSPage : Page
                     btnPay.Visibility = Visibility.Collapsed;
                     btnSendToKitchen.Visibility = Visibility.Collapsed;
                     btnbooking.Visibility = Visibility.Collapsed;
+                    transfer.Visibility = Visibility.Collapsed;
 
                     bool cancel = MessageBoxManager.ShowConfirmation(
                         "Stol bandligini bekor qilmoqchimisiz?");
@@ -604,6 +605,7 @@ public partial class MainPOSPage : Page
             btnReSendToKitchen.Visibility = Visibility.Collapsed;
             lblAdditional.Text = "Mahsulotlar";
             st_queue.Visibility = Visibility.Collapsed;
+            transfer.Visibility = Visibility.Collapsed;
         }
         else
         {
@@ -640,6 +642,7 @@ public partial class MainPOSPage : Page
         btnReSendToKitchen.Visibility = Visibility.Collapsed;
         lblAdditional.Text = "Mahsulotlar";
         st_queue.Visibility = Visibility.Collapsed;
+        transfer.Visibility = Visibility.Collapsed;
 
         if (selectedTable != null)
         {

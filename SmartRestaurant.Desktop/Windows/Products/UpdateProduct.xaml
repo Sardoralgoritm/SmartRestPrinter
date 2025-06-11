@@ -188,29 +188,42 @@
                 </StackPanel>
 
                 <StackPanel
-                    Grid.Row="3" 
-                    Margin="0,0,0,20">
-                    
-                    <TextBlock 
+                    Grid.Row="3"
+                    Margin="0,0,0,15">
+
+                    <TextBlock
                         Text="Kategoriyasi"
                         FontSize="16"
-                        Margin="0 0 0 5"
-                        FontWeight="SemiBold"/>
-                    
-                    <ComboBox 
+                        FontWeight="SemiBold"
+                        Margin="0 0 0 5"/>
+
+                    <ComboBox
+                        MaxDropDownHeight="100"
                         x:Name="cmbCategory"
                         FontSize="16"
-                        Height="30"
-                        MaxDropDownHeight="100"/>
-                    
-                </StackPanel>
-                
-                <StackPanel Grid.Row="3" Margin="0,70,0,20">
-                    <TextBlock Text="Oshpazga bu maxsulot jo'natilsinmi " FontSize="14" FontWeight="SemiBold"/>
-                    <CheckBox x:Name="isSendKitchenCheckBox" Content="Oshpazga jo'natilsin" FontSize="14" Margin="0,5,0,0"/>
+                        Height="30"/>
+
                 </StackPanel>
 
-                
+                <StackPanel
+                    Grid.Row="3"
+                    Margin="0 70,0,20">
+
+                    <TextBlock
+                        Text="Printer"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Margin="0 0 0 5"/>
+
+                    <ComboBox
+                        MaxDropDownHeight="100"
+                        x:Name="cmbPrinter"
+                        FontSize="16"
+                        Height="30"/>
+
+                </StackPanel>
+
+
                 <StackPanel 
                     Grid.Row="4" 
                     Orientation="Horizontal"
