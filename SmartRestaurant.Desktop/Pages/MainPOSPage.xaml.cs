@@ -25,6 +25,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace SmartRestaurant.Desktop.Pages;
@@ -76,6 +77,14 @@ public partial class MainPOSPage : Page
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         await RefreshPageDataAsync();
+
+        foreach (var scrollViewer in FindVisualChildren<ScrollViewer>(this))
+        {
+            scrollViewer.ManipulationBoundaryFeedback += (s, args) =>
+            {
+                args.Handled = true;
+            };
+        }
     }
 
     public void AddOrderItem(ProductDto product)
@@ -142,6 +151,22 @@ public partial class MainPOSPage : Page
             if (_selectedTable.Status == TableStatus.Busy && _newItems.Count > 0)
             {
                 btnReSendToKitchen.Visibility = Visibility.Collapsed;
+            }
+        }
+    }
+
+    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T t)
+            {
+                yield return t;
+            }
+            foreach (var childOfChild in FindVisualChildren<T>(child))
+            {
+                yield return childOfChild;
             }
         }
     }

@@ -60,7 +60,7 @@
                     PanningDeceleration="0.001"
                     IsManipulationEnabled="True"
                     PanningRatio="1"
-                    MaxHeight="480"
+                    MaxHeight="430"
                     Margin="0,0,0,12">
 
                     <WrapPanel 
