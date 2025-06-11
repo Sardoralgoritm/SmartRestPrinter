@@ -27,7 +27,6 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .Include(o => o.OrderedByUser)
             .Include(o => o.ClosedByUser)
             .Include(o => o.Table)
-                .ThenInclude(t => t.TableCategory)
             .FirstOrDefaultAsync(o => o.TableId == tableId && o.Status == OrderStatus.Open);
     }
 

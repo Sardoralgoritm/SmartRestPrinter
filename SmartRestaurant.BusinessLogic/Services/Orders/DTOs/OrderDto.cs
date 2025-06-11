@@ -28,7 +28,7 @@ public class OrderDto
         {
             Id = order.Id,
             TableId = order.TableId,
-            TableName = order.Table.Name.ToLower().StartsWith("takeaway") ? "Olib ketish" : $"{order.Table.TableCategory.Name} | {order.Table.Name}",
+            TableName = order.Table.Name.ToLower().StartsWith("takeaway") ? "Olib ketish" : order.Table.Name,
             TotalPrice = order.TotalPrice,
             QueueNumber = order.QueueNumber,
             CreatedAt = order.CreatedAt,

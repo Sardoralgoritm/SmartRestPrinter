@@ -755,7 +755,7 @@ public partial class MainPOSPage : Page
                     {
                         PrintService printService = new PrintService();
                         printService.PrintChefChek(
-                            new AddOrderDto { Items = printerGroup.Value, TableName = $"{tableDto.Name} | {tableDto.CategoryName}" },
+                            new AddOrderDto { Items = printerGroup.Value, TableName = tableDto.Name },
                             result.Item2,
                             printerGroup.Key // printer nomi
                         );
