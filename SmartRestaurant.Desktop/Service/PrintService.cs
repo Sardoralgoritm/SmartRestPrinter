@@ -26,8 +26,9 @@ public class PrintService : IDisposable
         printer.AlignLeft();
         printer.DoubleWidth2();
         printer.Append($"Navbat raqami:   {queue}");
+        printer.Append("\n");
         printer.AlignCenter();
-        printer.Append(new byte[] { 0x1D, 0x21, 0x21 });
+        printer.Append(new byte[] { 0x1D, 0x21, 0x18 });
         printer.BoldMode(dto.TableName);
         printer.Append("\n");
         printer.Separator();
@@ -358,17 +359,6 @@ public class PrintService : IDisposable
         {
             printer = new Printer(USER_PRINTER_NAME, "UTF-8");
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-            // Logo va branding
-            var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"logo.png");
-            if (File.Exists(imagePath))
-            {
-                using (var image = new Bitmap(imagePath))
-                {
-                    printer.AlignCenter();
-                    printer.Image(image);
-                }
-            }
 
             // ========== HEADER SECTION ==========
             printer.Separator();
