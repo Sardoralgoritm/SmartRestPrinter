@@ -60,6 +60,7 @@ public partial class MainPOSPage : Page
     public MainPOSPage()
     {
         InitializeComponent();
+
         _tableService = App.ServiceProvider.GetRequiredService<ITableService>();
         _orderService = App.ServiceProvider.GetRequiredService<IOrderService>();
         _orderItemService = App.ServiceProvider.GetRequiredService<IOrderItemService>();
@@ -67,6 +68,7 @@ public partial class MainPOSPage : Page
         _productService = App.ServiceProvider.GetRequiredService<IProductService>();
         _authService = App.ServiceProvider.GetRequiredService<IAuthService>();
         _tableCategoryService = App.ServiceProvider.GetRequiredService<ITableCategoryService>();
+
         nfi = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
         nfi.NumberGroupSeparator = " ";
     }
@@ -181,7 +183,7 @@ public partial class MainPOSPage : Page
         txt_totalPrice.Text = TotalPrice.ToString("#,0.##", nfi);
     }
 
-    private async void PreviousOrderItemQuantityDecreased(Guid orderItemId)
+    private async Task PreviousOrderItemQuantityDecreased(Guid orderItemId)
     {
         var order = await _orderService.GetOpenOrderByTableId(_selectedTable!.Id);
         if (_previousItems.FirstOrDefault(x => x.Id == orderItemId) is { } item)
@@ -247,6 +249,8 @@ public partial class MainPOSPage : Page
         var categories = await _tableCategoryService.GetAllAsync();
         spTableCategoryButtons.Children.Clear();
 
+        RadioButton firstRb = null;
+
         foreach (var category in categories)
         {
             var rb = new RadioButton
@@ -256,20 +260,68 @@ public partial class MainPOSPage : Page
                 Style = (Style)FindResource("RadioCategoryStyle"),
             };
 
-            rb.Checked += async (s, e) =>
-            {
-                var id = (Guid)((RadioButton)s).Tag;
-                await LoadTablesAsync(id);
-            };
-
             spTableCategoryButtons.Children.Add(rb);
+
+            if (firstRb == null)
+                firstRb = rb;
         }
 
-        // Dastlab birinchi kategoriya tanlansin
-        if (spTableCategoryButtons.Children.Count > 0 && spTableCategoryButtons.Children[0] is RadioButton firstRb)
+        if (firstRb != null)
         {
             firstRb.IsChecked = true;
+            foreach (RadioButton rb in spTableCategoryButtons.Children.OfType<RadioButton>())
+            {
+                rb.Checked += async (s, e) =>
+                {
+                    if (HasPendingOrder())
+                    {
+                        if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o'chiriladi. Davom etasizmi?"))
+                        {
+                            ((RadioButton)s).IsChecked = false;
+                            return;
+                        }
+                    }
+                    AllCollapsed();
+                    var id = (Guid)((RadioButton)s).Tag;
+                    await LoadTablesAsync(id);
+                };
+            }
+
+            var firstCategoryId = (Guid)firstRb.Tag;
+            await LoadTablesAsync(firstCategoryId);
         }
+
+        //foreach (var category in categories)
+        //{
+        //    var rb = new RadioButton
+        //    {
+        //        Content = category.Name,
+        //        Tag = category.Id,
+        //        Style = (Style)FindResource("RadioCategoryStyle"),
+        //    };
+
+        //    rb.Checked += async (s, e) =>
+        //    {
+        //        if (HasPendingOrder())
+        //        {
+        //            if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o‘chiriladi. Davom etasizmi?"))
+        //            {
+        //                return;
+        //            }
+        //        }
+        //        AllCollapsed();
+        //        var id = (Guid)((RadioButton)s).Tag;
+        //        await LoadTablesAsync(id);
+        //    };
+
+        //    spTableCategoryButtons.Children.Add(rb);
+        //}
+
+        //// Dastlab birinchi kategoriya tanlansin
+        //if (spTableCategoryButtons.Children.Count > 0 && spTableCategoryButtons.Children[0] is RadioButton firstRb)
+        //{
+        //    firstRb.IsChecked = true;
+        //}
     }
 
     private async Task LoadCategoriesAsync()
@@ -357,6 +409,16 @@ public partial class MainPOSPage : Page
         }
         else
             EmptyData.Visibility = Visibility.Visible;
+    }
+
+    private void AllCollapsed()
+    {
+        txt_total.Visibility = Visibility.Collapsed;
+        TotalPrice = 0;
+        txt_totalPrice.Visibility = Visibility.Collapsed;
+        btnReSendToKitchen.Visibility = Visibility.Collapsed;
+        transfer.Visibility = Visibility.Collapsed;
+        st_queue.Visibility = Visibility.Collapsed;
     }
 
     private async Task LoadTablesAsync(Guid categoryId)
@@ -496,7 +558,7 @@ public partial class MainPOSPage : Page
                     itemCard.btnCancel.Visibility = Visibility.Collapsed;
                     itemCard.btnBossCancel.Visibility = Visibility.Visible;
 
-                    itemCard.BossPasswordEntered += (s, password) =>
+                    itemCard.BossPasswordEntered += async (s, password) =>
                     {
                         var isBoss = _authService.CheckBossPassword(password);
                         if (!isBoss)
@@ -505,7 +567,7 @@ public partial class MainPOSPage : Page
                             return;
                         }
 
-                        PreviousOrderItemQuantityDecreased(item.Id);
+                        await PreviousOrderItemQuantityDecreased(item.Id);
                         NotificationManager.ShowNotification(NotificationWindow.MessageType.Success, "Mahsulot bekor qilindi.");
                     };
 
@@ -1273,9 +1335,11 @@ public partial class MainPOSPage : Page
 
     private async Task RefreshPageDataAsync()
     {
+        await LoadTableCategoriesAsync();
+
         await LoadCategoriesAsync();
 
-        await LoadTableCategoriesAsync();
+        AllCollapsed();
 
         lblAdditional.Visibility = Visibility.Visible;
 

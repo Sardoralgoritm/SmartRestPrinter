@@ -1,4 +1,5 @@
-﻿using SmartRestaurant.DataAccess.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartRestaurant.DataAccess.Data;
 using SmartRestaurant.DataAccess.Interfaces;
 using SmartRestaurant.Domain.Entities;
 
@@ -8,4 +9,10 @@ public class TableCategoryRepository : GenericRepository<TableCategory>, ITableC
 {
     public TableCategoryRepository(AppDbContext context) : base(context)
     { }
+
+    //private readonly IDbContextFactory<AppDbContext> _contextFactory;
+    //public TableCategoryRepository(IDbContextFactory<AppDbContext> contextFactory) : base(contextFactory)
+    //{
+    //    _contextFactory = contextFactory;
+    //}
 }

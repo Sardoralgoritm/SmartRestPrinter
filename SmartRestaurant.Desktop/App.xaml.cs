@@ -46,6 +46,9 @@ public partial class App : Application
                 var encryptedConn = configuration.GetConnectionString("DefaultConnection");
                 var decryptedConn = AesEncryptionHelper.Decrypt(encryptedConn);
 
+                //services.AddDbContextFactory<AppDbContext>(options =>
+                //    options.UseNpgsql(decryptedConn));
+
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(decryptedConn));
 

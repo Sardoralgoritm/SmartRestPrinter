@@ -25,5 +25,26 @@ public class UserRepository : GenericRepository<User>, IUserRepository
     {
         return await _context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
     }
+
+    //private readonly IDbContextFactory<AppDbContext> _contextFactory;
+
+    //public UserRepository(IDbContextFactory<AppDbContext> contextFactory) : base(contextFactory)
+    //{
+    //    _contextFactory = contextFactory;
+    //}
+
+    //public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
+    //{
+    //    using var context = _contextFactory.CreateDbContext();
+    //    return await context.Users
+    //        .AsNoTracking()
+    //        .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+    //}
+
+    //public async Task<bool> IsPhoneNumberExistsAsync(string phoneNumber)
+    //{
+    //    using var context = _contextFactory.CreateDbContext();
+    //    return await context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
+    //}
 }
 

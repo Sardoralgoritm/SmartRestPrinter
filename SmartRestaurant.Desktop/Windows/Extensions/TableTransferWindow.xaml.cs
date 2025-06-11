@@ -56,6 +56,10 @@ public partial class TableTransferWindow : Window
         {
             MessageBox.Show($"Ko'chirishda xatolik: {ex.Message}");
         }
+        finally
+        {
+            this.Close();
+        }
     }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)

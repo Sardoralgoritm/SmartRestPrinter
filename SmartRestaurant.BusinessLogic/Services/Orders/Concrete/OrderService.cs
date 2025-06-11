@@ -317,10 +317,12 @@ public class OrderService : IOrderService
             var exitingTable = await _unitOfWork.Tables.GetByIdAsync(oldTableId);
             if (exitingTable is null) return false;
             exitingTable.Status = TableStatus.Free;
+            await _unitOfWork.Tables.UpdateAsync(exitingTable);
 
             var newTable = await _unitOfWork.Tables.GetByIdAsync(newTableId);
             if (newTable is null) return false;
             newTable.Status = TableStatus.Busy;
+            await _unitOfWork.Tables.UpdateAsync(newTable);
 
             var result = await _unitOfWork.SaveChangesAsync();
             transaction.Commit();

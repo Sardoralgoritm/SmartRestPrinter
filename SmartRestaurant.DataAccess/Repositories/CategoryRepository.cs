@@ -2,11 +2,6 @@
 using SmartRestaurant.DataAccess.Data;
 using SmartRestaurant.DataAccess.Interfaces;
 using SmartRestaurant.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartRestaurant.DataAccess.Repositories;
 
@@ -22,4 +17,20 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
     {
         return await _context.Categories.Include(c => c.Products).AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
     }
+
+    //private readonly IDbContextFactory<AppDbContext> _contextFactory;
+
+    //public CategoryRepository(IDbContextFactory<AppDbContext> contextFactory) : base(contextFactory)
+    //{
+    //    _contextFactory = contextFactory;
+    //}
+
+    //public async Task<Category?> IsDeletingPossible(Guid id)
+    //{
+    //    using var context = _contextFactory.CreateDbContext();
+    //    return await context.Categories
+    //        .Include(c => c.Products)
+    //        .AsNoTracking()
+    //        .FirstOrDefaultAsync(c => c.Id == id);
+    //}
 }

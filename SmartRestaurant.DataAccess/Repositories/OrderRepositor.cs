@@ -29,5 +29,27 @@ public class OrderRepository : GenericRepository<Order>, IOrderRepository
             .Include(o => o.Table)
             .FirstOrDefaultAsync(o => o.TableId == tableId && o.Status == OrderStatus.Open);
     }
+
+    //private readonly IDbContextFactory<AppDbContext> _contextFactory;
+    //public OrderRepository(IDbContextFactory<AppDbContext> contextFactory) : base(contextFactory)
+    //{
+    //    _contextFactory = contextFactory;
+    //}
+
+    //public async Task<Order?> GetOpenOrderWithProductsByTableIdAsync(Guid tableId)
+    //{
+    //    using var context = _contextFactory.CreateDbContext();
+    //    return await context.Orders
+    //        .AsNoTracking()
+    //        .Where(o => !o.IsDeleted)
+    //        .Include(o => o.OrderItems
+    //            .Where(oi => !oi.IsDeleted))
+    //            .ThenInclude(oi => oi.Product)
+    //                .ThenInclude(p => p.Category)
+    //        .Include(o => o.OrderedByUser)
+    //        .Include(o => o.ClosedByUser)
+    //        .Include(o => o.Table)
+    //        .FirstOrDefaultAsync(o => o.TableId == tableId && o.Status == OrderStatus.Open);
+    //}
 }
 
