@@ -101,28 +101,6 @@ public class PrintService : IDisposable
         printer.Append("\n");
         printer.Separator();
 
-        // Qolgan miqdor (agar bor bo'lsa)
-        if (remainingQuantity > 0)
-        {
-            printer.AlignLeft();
-            printer.DoubleWidth2();
-            printer.BoldMode("✅ QOLGAN:");
-            printer.Append("\n");
-            printer.Append($"{productName}");
-            printer.Append("\n");
-            printer.BoldMode($"Miqdori: {remainingQuantity} ta");
-            printer.Append("\n");
-            printer.Separator();
-        }
-        else
-        {
-            printer.AlignCenter();
-            printer.DoubleWidth2();
-            printer.BoldMode("BUTUNLAY BEKOR QILINDI!");
-            printer.Append("\n");
-            printer.Separator();
-        }
-
         // Vaqt va qo'shimcha ma'lumotlar
         printer.Append("\n");
         printer.AlignLeft();
