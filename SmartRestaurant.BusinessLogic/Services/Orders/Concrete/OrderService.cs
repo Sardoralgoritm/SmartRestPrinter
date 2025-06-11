@@ -26,6 +26,7 @@ public class OrderService : IOrderService
                                            .ThenInclude(oi => oi.Product)
                                                .ThenInclude(p => p.Category)
                                        .Include(o => o.Table)
+                                           .ThenInclude(t => t.TableCategory)
                                        .Include(o => o.OrderedByUser)
                                        .Include(o => o.ClosedByUser)
                                        .Include(o => o.CanceledByUser).SortFilter(option);

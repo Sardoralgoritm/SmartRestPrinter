@@ -236,7 +236,7 @@ public class PrintService : IDisposable
         printer.Append("\n");
         printer.Append("Biz bilan biznesingizni avtomatlashtiring");
         printer.Append("\n");
-        printer.BoldMode("Tel: +998 99 666 11 32");
+        printer.BoldMode("Buyurtma uchun tel: +998 99 666 11 32");
         printer.Append("\n");
         printer.Append("Rahmat! Yana kutib qolamiz!");
         printer.Append("\n");
