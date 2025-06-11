@@ -335,4 +335,30 @@ public class OrderService : IOrderService
             return false;
         }
     }
+
+    public async Task<List<OrderItemDto>> GetAllReportOrderListAsync(OrderSortFilterOptions option)
+    {
+        var orders = _unitOfWork.Orders.GetAll()
+                                             .Include(o => o.OrderItems)
+                                                .ThenInclude(OrderItems => OrderItems.Product)
+                                             .SortFilter(option);
+
+        var result = await orders.SelectMany(o => o.OrderItems)
+                    .GroupBy(oi => new
+                    {
+                        oi.ProductId,
+                        oi.Product.Name,
+                        oi.Product.Price,
+                    })
+                    .Select(g => new OrderItemDto
+                    {
+                        ProductId = g.Key.ProductId,
+                        ProductName = g.Key.Name,
+                        ProductPrice = g.Key.Price,
+                        Quantity = g.Sum(x => x.Quantity)
+                    })
+                    .OrderByDescending(i => i.Quantity).ToListAsync();
+
+        return result;
+    }
 }

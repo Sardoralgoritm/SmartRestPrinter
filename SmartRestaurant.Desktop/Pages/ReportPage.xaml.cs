@@ -11,6 +11,7 @@ using SmartRestaurant.BusinessLogic.Services.Users.Concrete;
 using SmartRestaurant.Desktop.Components;
 using SmartRestaurant.Desktop.Components.Product;
 using SmartRestaurant.Desktop.Helpers.Session;
+using SmartRestaurant.Desktop.Service;
 using SmartRestaurant.Desktop.Windows.Extensions;
 using SmartRestaurant.Domain.Const;
 using SmartRestaurant.Domain.Models.PageResult;
@@ -508,8 +509,10 @@ public partial class ReportPage : Page, INotifyPropertyChanged
         Report_name.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) });
         Report_name.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         Report_name.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) });
+        Report_name.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(100) });
 
         UpdateHeaderTexts();
+        PrintReportButton.Visibility = Visibility.Visible;
     }
 
     private void UpdateHeaderTexts()
@@ -571,7 +574,13 @@ public partial class ReportPage : Page, INotifyPropertyChanged
 
     private void RestoreOriginalHeaders()
     {
-        Report_name.Children.Clear();
+        var elementsToRemove = Report_name.Children.OfType<TextBlock>().ToList();
+        foreach (var element in elementsToRemove)
+        {
+            Report_name.Children.Remove(element);
+        }
+
+        PrintReportButton.Visibility = Visibility.Collapsed;
 
         var originalHeaders = new string[] { "No", "Transaction id", "Stol nomi", "Manager", "Narxi" };
 
@@ -591,5 +600,30 @@ public partial class ReportPage : Page, INotifyPropertyChanged
             Grid.SetColumn(textBlock, i);
             Report_name.Children.Add(textBlock);
         }
+    }
+
+    private async void PrintReportButton_Click(object sender, RoutedEventArgs e)
+    {
+        var option = new OrderSortFilterOptions();
+
+        if (fromDateTime.SelectedDate != null && toDateTime.SelectedDate != null)
+        {
+            option.FromDateTime = fromDateTime.SelectedDate.Value;
+            option.ToDateTime = toDateTime.SelectedDate.Value;
+        }
+        else if (fromDateTime.SelectedDate != null || toDateTime.SelectedDate != null)
+        {
+            NotificationManager.ShowNotification(NotificationWindow.MessageType.Warning, "Iltimos, boshlanish va tugash vaqtini to'liq kiriting!", NotificationWindow.NotificationPosition.TopCenter);
+            return;
+        }
+
+        var products = await _orderService.GetAllReportOrderListAsync(option);
+
+        PrintService printService = new PrintService();
+
+        DateTime startDate = fromDateTime.SelectedDate ?? DateTimeUzb.UZBTime.Date;
+        DateTime endDate = toDateTime.SelectedDate ?? DateTimeUzb.UZBTime.Date.AddDays(1).AddSeconds(-1);
+
+        printService.PrintProductReport(products, startDate, endDate);
     }
 }

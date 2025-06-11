@@ -1,4 +1,5 @@
 ﻿using ESC_POS_USB_NET.Printer;
+using SmartRestaurant.BusinessLogic.Services.OrderItems.DTOs;
 using SmartRestaurant.BusinessLogic.Services.Orders.DTOs;
 using SmartRestaurant.Desktop.Helpers.Session;
 using SmartRestaurant.Desktop.Windows.Extensions;
@@ -23,7 +24,7 @@ public class PrintService : IDisposable
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         printer.AlignCenter();
-        printer.Append(new byte[] { 0x1D, 0x21, 0x33 });
+        printer.Append(new byte[] { 0x1D, 0x21, 0x21 });
         printer.BoldMode(dto.TableName);
         printer.Append("\n");
         printer.Separator();
@@ -161,7 +162,7 @@ public class PrintService : IDisposable
         printer.NormalWidth();
         printer.BoldMode("SMART RESTAURANT");
         printer.Append("\n");
-        printer.BoldMode("Manzil: Urgut krug, SXF binosi, 1-qavat");
+        printer.BoldMode("Manzil: Urgut sh, Navoiyshox ko`chasi Xalq banki ro`parasida");
         printer.Append("\n");
         printer.BoldMode($"Tel: {PHONE_NUMBER}");
         printer.Append("\n");
@@ -372,5 +373,238 @@ public class PrintService : IDisposable
         }
         else
             NotificationManager.ShowNotification(MessageType.Error, "Kassa uchun printer tanlanmagan.");
+    }
+
+    public void PrintProductReport(List<OrderItemDto> productItems, DateTime startDate, DateTime endDate)
+    {
+        try
+        {
+            printer = new Printer(USER_PRINTER_NAME, "UTF-8");
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            // Logo va branding
+            var imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"logo.png");
+            if (File.Exists(imagePath))
+            {
+                using (var image = new Bitmap(imagePath))
+                {
+                    printer.AlignCenter();
+                    printer.Image(image);
+                }
+            }
+
+            // ========== HEADER SECTION ==========
+            printer.Separator();
+            printer.Append("\n");
+            printer.AlignCenter();
+            printer.DoubleWidth2();
+            printer.BoldMode("📊 MAHSULOTLAR HISOBOTI");
+            printer.Append("\n");
+            printer.NormalWidth();
+            printer.BoldMode("SMART RESTAURANT ANALYTICS");
+            printer.Append("\n");
+            printer.Separator();
+
+            // ========== DAVR MA'LUMOTLARI ==========
+            printer.Append("\n");
+            printer.AlignLeft();
+            printer.BoldMode("📅 HISOBOT DAVRI:");
+            printer.Append("\n");
+
+            printer.Append($"   Boshlanish: {startDate:dd.MM.yyyy HH:mm}");
+            printer.Append("\n");
+            printer.Append($"   Tugash:     {endDate:dd.MM.yyyy HH:mm}");
+            printer.Append("\n");
+
+            // ========== MA'LUMOTLARNI GURUHLASH ==========
+            var groupedProducts = productItems
+                .GroupBy(x => new { x.ProductId, x.ProductName, x.ProductPrice, x.CategoryName })
+                .Select(g => new
+                {
+                    ProductName = g.Key.ProductName,
+                    CategoryName = g.Key.CategoryName,
+                    ProductPrice = g.Key.ProductPrice,
+                    TotalQuantity = g.Sum(x => x.Quantity),
+                    TotalAmount = g.Sum(x => x.TotalPrice),
+                    OrderCount = g.Count(),
+                    AvgOrderQuantity = g.Average(x => x.Quantity)
+                })
+                .OrderByDescending(x => x.TotalAmount)
+                .ToList();
+
+            // ========== UMUMIY STATISTIKA ==========
+            double grandTotal = groupedProducts.Sum(x => x.TotalAmount);
+            double totalQuantity = groupedProducts.Sum(x => x.TotalQuantity);
+            int totalProducts = groupedProducts.Count;
+            int totalOrders = productItems.Select(x => x.OrderId).Distinct().Count();
+
+            printer.Separator();
+            printer.Append("\n");
+            printer.AlignCenter();
+            printer.BoldMode("📈 UMUMIY NATIJALAR");
+            printer.Append("\n");
+            printer.AlignLeft();
+            printer.Append($"Jami mahsulot turlari:    {totalProducts}");
+            printer.Append("\n");
+            printer.Append($"Jami buyurtmalar:         {totalOrders}");
+            printer.Append("\n");
+            printer.Append($"Sotilgan umumiy miqdor:   {totalQuantity:N0} dona");
+            printer.Append("\n");
+            printer.BoldMode($"UMUMIY TUSHUM:           {grandTotal:N0} so'm");
+            printer.Append("\n");
+            printer.Append($"O'rtacha check:           {(grandTotal / totalOrders):N0} so'm");
+            printer.Append("\n");
+
+            // ========== TOP MAHSULOTLAR ==========
+            printer.Separator();
+            printer.Append("\n");
+            printer.AlignCenter();
+            printer.BoldMode("🏆 TOP MAHSULOTLAR (TUSHUM BO'YICHA)");
+            printer.Append("\n");
+            printer.AlignLeft();
+            printer.BoldMode("MAHSULOT               SONI    TUSHUM");
+            printer.Append("\n");
+            printer.Separator();
+
+            var topProducts = groupedProducts.Take(10).ToList();
+            for (int i = 0; i < topProducts.Count; i++)
+            {
+                var product = topProducts[i];
+                string productName = product.ProductName.Length > 20
+                    ? product.ProductName.Substring(0, 17) + "..."
+                    : product.ProductName;
+
+                string medal = i < 3 ? (i == 0 ? "🥇" : i == 1 ? "🥈" : "🥉") : $"{i + 1}.";
+
+                string line = string.Format("{0} {1,-18} {2,4} {3,10:N0}",
+                    medal,
+                    productName,
+                    product.TotalQuantity,
+                    product.TotalAmount);
+
+                printer.Append(line);
+                printer.Append("\n");
+            }
+
+            // ========== KATEGORIYA BO'YICHA ANALIZ ==========
+            var categoryStats = groupedProducts
+                .GroupBy(x => x.CategoryName)
+                .Select(g => new
+                {
+                    CategoryName = g.Key,
+                    ProductCount = g.Count(),
+                    TotalQuantity = g.Sum(x => x.TotalQuantity),
+                    TotalAmount = g.Sum(x => x.TotalAmount),
+                    Percentage = (g.Sum(x => x.TotalAmount) / grandTotal) * 100
+                })
+                .OrderByDescending(x => x.TotalAmount)
+                .ToList();
+
+            printer.Separator();
+            printer.Append("\n");
+            printer.AlignCenter();
+            printer.BoldMode("📊 KATEGORIYA BO'YICHA ANALIZ");
+            printer.Append("\n");
+            printer.AlignLeft();
+            printer.BoldMode("KATEGORIYA        TUSHUM      %");
+            printer.Append("\n");
+            printer.Separator();
+
+            foreach (var category in categoryStats)
+            {
+                string categoryName = category.CategoryName.Length > 15
+                    ? category.CategoryName.Substring(0, 12) + "..."
+                    : category.CategoryName;
+
+                string line = string.Format("{0,-15} {1,8:N0} {2,5:F1}%",
+                    categoryName,
+                    category.TotalAmount,
+                    category.Percentage);
+
+                printer.Append(line);
+                printer.Append("\n");
+            }
+
+            // ========== DETALLI JADVAL ==========
+            printer.Separator();
+            printer.Append("\n");
+            printer.AlignCenter();
+            printer.BoldMode("📋 BATAFSIL MA'LUMOTLAR");
+            printer.Append("\n");
+            printer.AlignLeft();
+            printer.BoldMode("No MAHSULOT           SONI  NARXI   JAMI");
+            printer.Append("\n");
+            printer.Separator();
+
+            for (int i = 0; i < groupedProducts.Count; i++)
+            {
+                var product = groupedProducts[i];
+                string productName = product.ProductName.Length > 16
+                    ? product.ProductName.Substring(0, 13) + "..."
+                    : product.ProductName;
+
+                string line = string.Format("{0,2} {1,-16} {2,4} {3,6:N0} {4,8:N0}",
+                    i + 1,
+                    productName,
+                    product.TotalQuantity,
+                    product.ProductPrice,
+                    product.TotalAmount);
+
+                printer.Append(line);
+                printer.Append("\n");
+            }
+
+            // ========== YAKUNIY NATIJA ==========
+            printer.Separator();
+            printer.Append("\n");
+            printer.AlignCenter();
+            printer.DoubleWidth2();
+            printer.BoldMode($"YAKUNIY TUSHUM: {grandTotal:N0}");
+            printer.Append("\n");
+            printer.NormalWidth();
+
+            // ========== HISOBOT MA'LUMOTLARI ==========
+            printer.Separator();
+            printer.Append("\n");
+            printer.AlignLeft();
+            printer.Append($"Hisobot yaratildi: {DateTime.Now:dd.MM.yyyy HH:mm}");
+            printer.Append("\n");
+            printer.BoldMode($"Mas'ul: {SessionManager.FirstName} {SessionManager.LastName}");
+            printer.Append("\n");
+            printer.Append($"Hisobot ID: RPT-{DateTime.Now:yyyyMMdd-HHmmss}");
+            printer.Append("\n");
+
+            // ========== FOOTER ==========
+            printer.Separator();
+            printer.Append("\n");
+            printer.AlignCenter();
+            printer.BoldMode("SMART RESTAURANT SYSTEM");
+            printer.Append("\n");
+            printer.Append("📞 Texnik yordam: +998 99 666 11 32");
+            printer.Append("\n");
+            printer.Append("💼 SMART PARTNERS - Biznes avtomatlashtirish");
+            printer.Append("\n");
+            printer.Append("\n");
+
+            // Chop etish
+            if (!string.IsNullOrEmpty(USER_PRINTER_NAME))
+            {
+                printer.FullPaperCut();
+                printer.PrintDocument();
+
+                // Success notification
+                NotificationManager.ShowNotification(MessageType.Success,
+                    $"Mahsulotlar hisoboti muvaffaqiyatli chop etildi!\nJami: {totalProducts} mahsulot, {grandTotal:N0} so'm tushum");
+            }
+            else
+            {
+                NotificationManager.ShowNotification(MessageType.Error, "Hisobot uchun printer tanlanmagan.");
+            }
+        }
+        catch (Exception ex)
+        {
+            NotificationManager.ShowNotification(MessageType.Error,
+                $"Hisobotni chop etishda xatolik: {ex.Message}");
+        }
     }
 }

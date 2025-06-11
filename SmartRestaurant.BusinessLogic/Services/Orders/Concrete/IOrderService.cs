@@ -8,6 +8,7 @@ public interface IOrderService
     PagedResult<OrderDto> GetAll(OrderSortFilterOptions option);
     Task<ReportOrderDto> GetReportOrder(OrderSortFilterOptions option);
     PagedResult<OrderItemDto> GetAllReportOrder(OrderSortFilterOptions option);
+    Task<List<OrderItemDto>> GetAllReportOrderListAsync(OrderSortFilterOptions option);
     Task<OrderDto?> GetByIdAsync(Guid id);
     Task<(bool, int)> CreateAsync(AddOrderDto dto);
     Task<bool> DeleteAsync(Guid id);
