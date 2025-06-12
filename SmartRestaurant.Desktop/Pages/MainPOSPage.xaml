@@ -57,9 +57,7 @@
                     VerticalScrollBarVisibility="Hidden"
                     PanningMode="Both"     
                     CanContentScroll="False"
-                    PanningDeceleration="0.001"
                     IsManipulationEnabled="True"
-                    PanningRatio="1"
                     MaxHeight="430"
                     Margin="0,0,0,12">
 
@@ -152,9 +150,7 @@
                         PanningMode="Both"
                         IsManipulationEnabled="True"
                         CanContentScroll="False"
-                        Margin="0,10"
-                        PanningDeceleration="0.001"
-                        PanningRatio="1">
+                        Margin="0,10">
 
                         <StackPanel 
                             x:Name="spProducts"
@@ -278,8 +274,6 @@
                     IsManipulationEnabled="True"
                     CanContentScroll="False"
                     Margin="0,0,0,10"
-                    PanningDeceleration="0.003"
-                    PanningRatio="3"
                     MaxHeight="400"
                     x:Name="ScrollSpNewOredrs">
                     

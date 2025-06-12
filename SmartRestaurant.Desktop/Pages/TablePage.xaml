@@ -163,9 +163,7 @@
             VerticalScrollBarVisibility="Hidden"
             PanningMode="VerticalOnly"
             IsManipulationEnabled="True"
-            CanContentScroll="False"
-            PanningDeceleration="0.001"
-            PanningRatio="1">
+            CanContentScroll="False">
 
             <StackPanel
                 x:Name="st_Categories"
