@@ -90,13 +90,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // Mavjud manipulation sozlamalari
-        EventManager.RegisterClassHandler(
-            typeof(Window),
-            UIElement.ManipulationBoundaryFeedbackEvent,
-            new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true)
-        );
-
+        // MonoBlog uchun maxsus sozlamalar
         EventManager.RegisterClassHandler(
             typeof(Window),
             Window.LoadedEvent,
@@ -104,20 +98,46 @@ public partial class App : Application
             {
                 if (sender is Window window)
                 {
+                    // Touch screen uchun stylus sozlamalari
                     Stylus.SetIsPressAndHoldEnabled(window, false);
                     Stylus.SetIsFlicksEnabled(window, false);
+                    Stylus.SetIsTapFeedbackEnabled(window, false);
+
+                    // Manipulation sozlamalari
+                    window.IsManipulationEnabled = true;
                 }
             })
         );
 
-        // MonoBlog touch scroll uchun qo'shimcha sozlamalar
-        EventManager.RegisterClassHandler(typeof(UIElement),
-            UIElement.ManipulationStartedEvent,
-            new EventHandler<ManipulationStartedEventArgs>(OnManipulationStarted), true);
+        // Global manipulation sozlamalari
+        EventManager.RegisterClassHandler(
+            typeof(UIElement),
+            UIElement.ManipulationBoundaryFeedbackEvent,
+            new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true),
+            true
+        );
 
-        EventManager.RegisterClassHandler(typeof(ScrollViewer),
+        // ScrollViewer'lar uchun global sozlamalar
+        EventManager.RegisterClassHandler(
+            typeof(ScrollViewer),
             ScrollViewer.LoadedEvent,
-            new RoutedEventHandler(OnScrollViewerLoaded), true);
+            new RoutedEventHandler((sender, args) =>
+            {
+                if (sender is ScrollViewer scrollViewer)
+                {
+                    scrollViewer.IsManipulationEnabled = true;
+                    scrollViewer.CanContentScroll = false;
+
+                    // Touch screen device detection
+                    if (Tablet.TabletDevices.Count > 0)
+                    {
+                        scrollViewer.PanningDeceleration = 0.001;
+                        scrollViewer.PanningRatio = 1.0;
+                    }
+                }
+            }),
+            true
+        );
 
         if (!LicenseService.IsLicenseValid())
         {
@@ -134,21 +154,6 @@ public partial class App : Application
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await EnsureTakeawayTableExistsAsync(context);
         await EnsureDefaultUserExistsAsync(context);
-    }
-
-    // Qo'shimcha metodlar
-    private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
-    {
-        e.Handled = false;
-    }
-
-    private void OnScrollViewerLoaded(object sender, RoutedEventArgs e)
-    {
-        if (sender is ScrollViewer scrollViewer)
-        {
-            scrollViewer.IsManipulationEnabled = true;
-            scrollViewer.CanContentScroll = false;
-        }
     }
 
     private async Task EnsureTakeawayTableExistsAsync(AppDbContext context)
