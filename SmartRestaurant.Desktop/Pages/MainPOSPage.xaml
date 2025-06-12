@@ -40,7 +40,7 @@
                     FontSize="20"
                     FontWeight="Bold"/>
 
-                <!--<ScrollViewer
+                <ScrollViewer
                     HorizontalScrollBarVisibility="Hidden"
                     VerticalScrollBarVisibility="Hidden"
                     IsManipulationEnabled="True"
@@ -51,14 +51,15 @@
                         x:Name="spTableCategoryButtons"
                         Height="60"
                         Orientation="Horizontal"/>
-                </ScrollViewer>-->
+                </ScrollViewer>
 
                 <ScrollViewer 
-                    VerticalScrollBarVisibility="Hidden"
-                    PanningMode="Both"     
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    PanningMode="VerticalOnly"     
                     CanContentScroll="False"
-                    PanningDeceleration="0.001"
                     IsManipulationEnabled="True"
+                    PanningDeceleration="0.001"
                     PanningRatio="1"
                     MaxHeight="430"
                     Margin="0,0,0,12">
@@ -148,7 +149,8 @@
                         HorizontalAlignment="Center"/>
 
                     <ScrollViewer 
-                        VerticalScrollBarVisibility="Hidden"
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Disabled"
                         PanningMode="VerticalOnly"
                         IsManipulationEnabled="True"
                         CanContentScroll="False"

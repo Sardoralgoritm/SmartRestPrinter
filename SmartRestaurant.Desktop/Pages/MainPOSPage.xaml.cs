@@ -78,13 +78,7 @@ public partial class MainPOSPage : Page
     {
         await RefreshPageDataAsync();
 
-        foreach (var scrollViewer in FindVisualChildren<ScrollViewer>(this))
-        {
-            scrollViewer.ManipulationBoundaryFeedback += (s, args) =>
-            {
-                args.Handled = true;
-            };
-        }
+        ConfigureScrollViewersForTouch();
     }
 
     public void AddOrderItem(ProductDto product)
@@ -151,22 +145,6 @@ public partial class MainPOSPage : Page
             if (_selectedTable.Status == TableStatus.Busy && _newItems.Count > 0)
             {
                 btnReSendToKitchen.Visibility = Visibility.Collapsed;
-            }
-        }
-    }
-
-    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
-    {
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            var child = VisualTreeHelper.GetChild(parent, i);
-            if (child is T t)
-            {
-                yield return t;
-            }
-            foreach (var childOfChild in FindVisualChildren<T>(child))
-            {
-                yield return childOfChild;
             }
         }
     }
@@ -271,82 +249,50 @@ public partial class MainPOSPage : Page
 
     private async Task LoadTableCategoriesAsync()
     {
-            var categories = await _tableCategoryService.GetAllAsync();
-        //    spTableCategoryButtons.Children.Clear();
+        var categories = await _tableCategoryService.GetAllAsync();
+        spTableCategoryButtons.Children.Clear();
 
-        //    RadioButton firstRb = null;
+        RadioButton firstRb = null;
 
-        //    foreach (var category in categories)
-        //    {
-        //        var rb = new RadioButton
-        //        {
-        //            Content = category.Name,
-        //            Tag = category.Id,
-        //            Style = (Style)FindResource("RadioCategoryStyle"),
-        //        };
+        foreach (var category in categories)
+        {
+            var rb = new RadioButton
+            {
+                Content = category.Name,
+                Tag = category.Id,
+                Style = (Style)FindResource("RadioCategoryStyle"),
+            };
 
-        //        spTableCategoryButtons.Children.Add(rb);
+            spTableCategoryButtons.Children.Add(rb);
 
-        //        if (firstRb == null)
-        //            firstRb = rb;
-        //    }
+            if (firstRb == null)
+                firstRb = rb;
+        }
 
-        //    if (firstRb != null)
-        //    {
-        //        firstRb.IsChecked = true;
-        //        foreach (RadioButton rb in spTableCategoryButtons.Children.OfType<RadioButton>())
-        //        {
-        //            rb.Checked += async (s, e) =>
-        //            {
-        //                if (HasPendingOrder())
-        //                {
-        //                    if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o'chiriladi. Davom etasizmi?"))
-        //                    {
-        //                        ((RadioButton)s).IsChecked = false;
-        //                        return;
-        //                    }
-        //                }
-        //                AllCollapsed();
-        //                var id = (Guid)((RadioButton)s).Tag;
-        //                await LoadTablesAsync(id);
-        //            };
-        //        }
+        if (firstRb != null)
+        {
+            firstRb.IsChecked = true;
+            foreach (RadioButton rb in spTableCategoryButtons.Children.OfType<RadioButton>())
+            {
+                rb.Checked += async (s, e) =>
+                {
+                    if (HasPendingOrder())
+                    {
+                        if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o'chiriladi. Davom etasizmi?"))
+                        {
+                            ((RadioButton)s).IsChecked = false;
+                            return;
+                        }
+                    }
+                    AllCollapsed();
+                    var id = (Guid)((RadioButton)s).Tag;
+                    await LoadTablesAsync(id);
+                };
+            }
 
-        //        var firstCategoryId = (Guid)firstRb.Tag;
-        //        await LoadTablesAsync(firstCategoryId);
-        //    }
-
-        //    //foreach (var category in categories)
-        //    //{
-        //    //    var rb = new RadioButton
-        //    //    {
-        //    //        Content = category.Name,
-        //    //        Tag = category.Id,
-        //    //        Style = (Style)FindResource("RadioCategoryStyle"),
-        //    //    };
-
-        //    //    rb.Checked += async (s, e) =>
-        //    //    {
-        //    //        if (HasPendingOrder())
-        //    //        {
-        //    //            if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o‘chiriladi. Davom etasizmi?"))
-        //    //            {
-        //    //                return;
-        //    //            }
-        //    //        }
-        //    //        AllCollapsed();
-        //    //        var id = (Guid)((RadioButton)s).Tag;
-        //    //        await LoadTablesAsync(id);
-        //    //    };
-
-        //    //    spTableCategoryButtons.Children.Add(rb);
-        //    //}
-
-        //    //// Dastlab birinchi kategoriya tanlansin
-        //    //if (spTableCategoryButtons.Children.Count > 0 && spTableCategoryButtons.Children[0] is RadioButton firstRb)
-        //    //{
-        //    //    firstRb.IsChecked = true;
-        //    //}
+            var firstCategoryId = (Guid)firstRb.Tag;
+            await LoadTablesAsync(firstCategoryId);
+        }
     }
 
     private async Task LoadCategoriesAsync()
@@ -1372,5 +1318,89 @@ public partial class MainPOSPage : Page
         lblAdditional.Visibility = Visibility.Visible;
 
         user_name.Text = SessionManager.FirstName + " | " + SessionManager.Role;
+    }
+
+    private void ConfigureScrollViewersForTouch()
+    {
+        // Barcha ScrollViewer'larni topish va sozlash
+        foreach (var scrollViewer in FindVisualChildren<ScrollViewer>(this))
+        {
+            // Touch uchun asosiy sozlamalar
+            scrollViewer.IsManipulationEnabled = true;
+            scrollViewer.ManipulationBoundaryFeedback += OnManipulationBoundaryFeedback;
+
+            // Vertical scroll uchun
+            if (scrollViewer.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled)
+            {
+                scrollViewer.PanningMode = PanningMode.VerticalOnly;
+                scrollViewer.CanContentScroll = false; // Smooth scroll uchun
+                scrollViewer.PanningDeceleration = 0.001;
+                scrollViewer.PanningRatio = 1.0;
+            }
+
+            // Horizontal scroll uchun  
+            if (scrollViewer.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled)
+            {
+                if (scrollViewer.PanningMode == PanningMode.None)
+                    scrollViewer.PanningMode = PanningMode.HorizontalOnly;
+                else if (scrollViewer.PanningMode == PanningMode.VerticalOnly)
+                    scrollViewer.PanningMode = PanningMode.Both;
+            }
+
+            // WPF uchun touch sozlamalari
+            scrollViewer.Focusable = true;
+            scrollViewer.IsTabStop = false;
+
+            // Touch eventlarini qo'shish
+            scrollViewer.PreviewTouchDown += ScrollViewer_PreviewTouchDown;
+            scrollViewer.PreviewTouchMove += ScrollViewer_PreviewTouchMove;
+            scrollViewer.PreviewTouchUp += ScrollViewer_PreviewTouchUp;
+        }
+    }
+
+    private void OnManipulationBoundaryFeedback(object sender, ManipulationBoundaryFeedbackEventArgs e)
+    {
+        e.Handled = true;
+    }
+
+    private void ScrollViewer_PreviewTouchDown(object sender, TouchEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer)
+        {
+            scrollViewer.CaptureMouse();
+            e.Handled = false; // Scroll ishlashi uchun
+        }
+    }
+
+    private void ScrollViewer_PreviewTouchMove(object sender, TouchEventArgs e)
+    {
+        e.Handled = false; // Scroll ishlashi uchun
+    }
+
+    private void ScrollViewer_PreviewTouchUp(object sender, TouchEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer)
+        {
+            scrollViewer.ReleaseMouseCapture();
+            e.Handled = false;
+        }
+    }
+
+    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
+    {
+        if (parent == null) yield break;
+
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+        {
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is T t)
+            {
+                yield return t;
+            }
+            foreach (var childOfChild in FindVisualChildren<T>(child))
+            {
+                yield return childOfChild;
+            }
+        }
     }
 }
