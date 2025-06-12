@@ -271,82 +271,82 @@ public partial class MainPOSPage : Page
 
     private async Task LoadTableCategoriesAsync()
     {
-        var categories = await _tableCategoryService.GetAllAsync();
-        spTableCategoryButtons.Children.Clear();
+            var categories = await _tableCategoryService.GetAllAsync();
+        //    spTableCategoryButtons.Children.Clear();
 
-        RadioButton firstRb = null;
+        //    RadioButton firstRb = null;
 
-        foreach (var category in categories)
-        {
-            var rb = new RadioButton
-            {
-                Content = category.Name,
-                Tag = category.Id,
-                Style = (Style)FindResource("RadioCategoryStyle"),
-            };
-
-            spTableCategoryButtons.Children.Add(rb);
-
-            if (firstRb == null)
-                firstRb = rb;
-        }
-
-        if (firstRb != null)
-        {
-            firstRb.IsChecked = true;
-            foreach (RadioButton rb in spTableCategoryButtons.Children.OfType<RadioButton>())
-            {
-                rb.Checked += async (s, e) =>
-                {
-                    if (HasPendingOrder())
-                    {
-                        if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o'chiriladi. Davom etasizmi?"))
-                        {
-                            ((RadioButton)s).IsChecked = false;
-                            return;
-                        }
-                    }
-                    AllCollapsed();
-                    var id = (Guid)((RadioButton)s).Tag;
-                    await LoadTablesAsync(id);
-                };
-            }
-
-            var firstCategoryId = (Guid)firstRb.Tag;
-            await LoadTablesAsync(firstCategoryId);
-        }
-
-        //foreach (var category in categories)
-        //{
-        //    var rb = new RadioButton
+        //    foreach (var category in categories)
         //    {
-        //        Content = category.Name,
-        //        Tag = category.Id,
-        //        Style = (Style)FindResource("RadioCategoryStyle"),
-        //    };
-
-        //    rb.Checked += async (s, e) =>
-        //    {
-        //        if (HasPendingOrder())
+        //        var rb = new RadioButton
         //        {
-        //            if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o‘chiriladi. Davom etasizmi?"))
+        //            Content = category.Name,
+        //            Tag = category.Id,
+        //            Style = (Style)FindResource("RadioCategoryStyle"),
+        //        };
+
+        //        spTableCategoryButtons.Children.Add(rb);
+
+        //        if (firstRb == null)
+        //            firstRb = rb;
+        //    }
+
+        //    if (firstRb != null)
+        //    {
+        //        firstRb.IsChecked = true;
+        //        foreach (RadioButton rb in spTableCategoryButtons.Children.OfType<RadioButton>())
+        //        {
+        //            rb.Checked += async (s, e) =>
         //            {
-        //                return;
-        //            }
+        //                if (HasPendingOrder())
+        //                {
+        //                    if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o'chiriladi. Davom etasizmi?"))
+        //                    {
+        //                        ((RadioButton)s).IsChecked = false;
+        //                        return;
+        //                    }
+        //                }
+        //                AllCollapsed();
+        //                var id = (Guid)((RadioButton)s).Tag;
+        //                await LoadTablesAsync(id);
+        //            };
         //        }
-        //        AllCollapsed();
-        //        var id = (Guid)((RadioButton)s).Tag;
-        //        await LoadTablesAsync(id);
-        //    };
 
-        //    spTableCategoryButtons.Children.Add(rb);
-        //}
+        //        var firstCategoryId = (Guid)firstRb.Tag;
+        //        await LoadTablesAsync(firstCategoryId);
+        //    }
 
-        //// Dastlab birinchi kategoriya tanlansin
-        //if (spTableCategoryButtons.Children.Count > 0 && spTableCategoryButtons.Children[0] is RadioButton firstRb)
-        //{
-        //    firstRb.IsChecked = true;
-        //}
+        //    //foreach (var category in categories)
+        //    //{
+        //    //    var rb = new RadioButton
+        //    //    {
+        //    //        Content = category.Name,
+        //    //        Tag = category.Id,
+        //    //        Style = (Style)FindResource("RadioCategoryStyle"),
+        //    //    };
+
+        //    //    rb.Checked += async (s, e) =>
+        //    //    {
+        //    //        if (HasPendingOrder())
+        //    //        {
+        //    //            if (!MessageBoxManager.ShowConfirmation("Buyurtma hali yakunlanmagan. Davom etsangiz, hozirgi buyurtma o‘chiriladi. Davom etasizmi?"))
+        //    //            {
+        //    //                return;
+        //    //            }
+        //    //        }
+        //    //        AllCollapsed();
+        //    //        var id = (Guid)((RadioButton)s).Tag;
+        //    //        await LoadTablesAsync(id);
+        //    //    };
+
+        //    //    spTableCategoryButtons.Children.Add(rb);
+        //    //}
+
+        //    //// Dastlab birinchi kategoriya tanlansin
+        //    //if (spTableCategoryButtons.Children.Count > 0 && spTableCategoryButtons.Children[0] is RadioButton firstRb)
+        //    //{
+        //    //    firstRb.IsChecked = true;
+        //    //}
     }
 
     private async Task LoadCategoriesAsync()
