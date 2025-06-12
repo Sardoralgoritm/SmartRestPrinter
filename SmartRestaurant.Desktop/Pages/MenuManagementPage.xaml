@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SmartRestaurant.Desktop.Components.Loader"
       Title="MenuManagementPage"
+      IsManipulationEnabled="True"
       Background="White"
       Loaded="Page_Loaded">
     <Grid Margin="20">
@@ -52,12 +53,14 @@
                 HorizontalAlignment="Right">
                 
                 <Button 
+                    IsManipulationEnabled="True"
                     Content="Mahsulot qo'shish" 
                     Style="{StaticResource PrimaryButton}"
                     Margin="0,0,15,0" 
                     Click="Add_Product_Click"/>
                 
                 <Button 
+                    IsManipulationEnabled="True"
                     Content="Kategoriya qo'shish"
                     Style="{StaticResource PrimaryButton}"
                     Click="Add_Category_Click"/>

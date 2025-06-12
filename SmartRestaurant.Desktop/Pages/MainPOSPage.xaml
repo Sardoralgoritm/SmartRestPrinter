@@ -7,6 +7,8 @@
       mc:Ignorable="d"
       Title="MainPOSPage"
       Background="White"
+            IsManipulationEnabled="True"
+
       Loaded="Page_Loaded">
 
     <Grid
@@ -74,6 +76,7 @@
                 </ScrollViewer>
 
                 <Button 
+                          IsManipulationEnabled="True"
                     Content="TakeAway"
                     x:Name="btnTakeAway"
                     Style="{StaticResource TakeawayButton}"

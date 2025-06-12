@@ -180,7 +180,6 @@ public partial class App : Application
     {
         public static void DisableStylus()
         {
-            // Stylus'ni Application darajasida o‘chiradi
             var inputManager = typeof(InputManager).Assembly.GetType("System.Windows.Input.StylusLogic");
             if (inputManager == null) return;
 

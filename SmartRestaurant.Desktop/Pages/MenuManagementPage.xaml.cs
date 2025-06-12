@@ -293,6 +293,10 @@ public partial class MenuManagementPage : Page
 
     private void Add_Category_Click(object sender, RoutedEventArgs e)
     {
+        this.TouchDown += (s, e) =>
+        {
+            MessageBox.Show("✅ Touch ishlayapti!");
+        };
         var addCategory = new AddCategory();
         addCategory.CategoryAdded += OnCategoryCreated;
         addCategory.ShowDialog();
