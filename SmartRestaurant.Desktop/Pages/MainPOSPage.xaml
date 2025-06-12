@@ -47,10 +47,19 @@
                     PanningMode="HorizontalOnly"
                     CanContentScroll="False"
                     Padding="0 3 0 0">
-                    <StackPanel
-                        x:Name="spTableCategoryButtons"
+                    <!--<StackPanel
+                        :Name="spTableCategoryButtons"
                         Height="60"
-                        Orientation="Horizontal"/>
+                        Orientation="Horizontal"/>-->
+                    <StackPanel>
+                        <TextBlock Text="Test 1" Height="100" Background="Red"/>
+                        <TextBlock Text="Test 2" Height="100" Background="Blue"/>
+                        <TextBlock Text="Test 3" Height="100" Background="Green"/>
+                        <TextBlock Text="Test 4" Height="100" Background="Yellow"/>
+                        <TextBlock Text="Test 5" Height="100" Background="Purple"/>
+                        <TextBlock Text="Test 5" Height="100" Background="Purple"/>
+                        <TextBlock Text="Test 5" Height="100" Background="Purple"/>
+                    </StackPanel>
                 </ScrollViewer>
 
                 <ScrollViewer 

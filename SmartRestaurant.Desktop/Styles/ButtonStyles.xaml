@@ -1211,7 +1211,6 @@
         <Setter Property="BorderBrush" Value="#B0BEC5" />
         <Setter Property="BorderThickness" Value="1.5" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -1220,8 +1219,7 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="5"
-                        Padding="5"
-                        SnapsToDevicePixels="True">
+                        Padding="5">
                         <ContentPresenter
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"  
@@ -1251,7 +1249,6 @@
         <Setter Property="BorderBrush" Value="#81C784" />
         <Setter Property="BorderThickness" Value="1.5" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -1260,8 +1257,7 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="6"
-                    Padding="8,5"
-                    SnapsToDevicePixels="True">
+                    Padding="8,5">
                         <ContentPresenter
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -1298,7 +1294,6 @@
         <Setter Property="BorderBrush" Value="#14919F"/>
         <Setter Property="BorderThickness" Value="1.5"/>
         <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -1307,8 +1302,7 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="6" 
-                    Padding="8,5"
-                    SnapsToDevicePixels="True">
+                    Padding="8,5">
                         <ContentPresenter 
                         HorizontalAlignment="Center" 
                         VerticalAlignment="Center"
