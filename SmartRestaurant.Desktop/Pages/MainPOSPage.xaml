@@ -44,7 +44,7 @@
                     HorizontalScrollBarVisibility="Hidden"
                     VerticalScrollBarVisibility="Hidden"
                     IsManipulationEnabled="True"
-                    PanningMode="HorizontalOnly"
+                    PanningMode="Both"
                     CanContentScroll="False"
                     Padding="0 3 0 0"
                     Height="60">
@@ -63,26 +63,12 @@
                     MaxHeight="430"
                     Margin="0,0,0,12">
 
-                    <!--<WrapPanel 
+                    <WrapPanel 
                         x:Name="wpTables"
                         ItemWidth="105"
                         ItemHeight="80"
                         Orientation="Horizontal"
-                        Margin="0,0,0,0"/>-->
-
-                    <StackPanel>
-                        <TextBlock Text="Test 1" Height="100" Background="Red"/>
-                        <TextBlock Text="Test 2" Height="100" Background="Blue"/>
-                        <TextBlock Text="Test 3" Height="100" Background="Green"/>
-                        <TextBlock Text="Test 4" Height="100" Background="Yellow"/>
-                        <TextBlock Text="Test 5" Height="100" Background="Purple"/>
-                        <TextBlock Text="Test 6" Height="100" Background="Orange"/>
-                        <TextBlock Text="Test 7" Height="100" Background="Pink"/>
-                        <TextBlock Text="Test 8" Height="100" Background="Brown"/>
-                        <TextBlock Text="Test 8" Height="100" Background="Brown"/>
-                        <TextBlock Text="Test 8" Height="100" Background="Brown"/>
-                        <TextBlock Text="Test 8" Height="100" Background="Brown"/>
-                    </StackPanel>
+                        Margin="0,0,0,0"/>
 
                 </ScrollViewer>
 
@@ -134,7 +120,7 @@
                         HorizontalScrollBarVisibility="Hidden"
                         VerticalScrollBarVisibility="Hidden"
                         IsManipulationEnabled="True"
-                        PanningMode="HorizontalOnly"
+                        PanningMode="Both"
                         CanContentScroll="False"
                         Padding="0 3 0 0"
                         Height="60">
@@ -163,7 +149,7 @@
 
                     <ScrollViewer 
                         VerticalScrollBarVisibility="Hidden"
-                        PanningMode="VerticalOnly"
+                        PanningMode="Both"
                         IsManipulationEnabled="True"
                         CanContentScroll="False"
                         Margin="0,10"
@@ -172,7 +158,6 @@
 
                         <StackPanel 
                             x:Name="spProducts"
-                            Margin="0"
                             Orientation="Vertical" />
 
                     </ScrollViewer>
@@ -267,7 +252,7 @@
 
                 <ScrollViewer
                     VerticalScrollBarVisibility="Hidden"
-                    PanningMode="VerticalOnly"
+                    PanningMode="Both"
                     IsManipulationEnabled="True"
                     CanContentScroll="False"
                     Margin="0,0,0,12"
@@ -289,7 +274,7 @@
 
                 <ScrollViewer
                     VerticalScrollBarVisibility="Hidden"
-                    PanningMode="VerticalOnly"
+                    PanningMode="Both"
                     IsManipulationEnabled="True"
                     CanContentScroll="False"
                     Margin="0,0,0,10"

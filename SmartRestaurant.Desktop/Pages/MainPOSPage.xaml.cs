@@ -392,7 +392,7 @@ public partial class MainPOSPage : Page
 
     private async Task LoadTablesAsync(Guid categoryId)
     {
-        //wpTables.Children.Clear();
+        wpTables.Children.Clear();
         _newItems.Clear();
         _orderItemComponents.Clear();
         spNewOrders.Children.Clear();
@@ -494,7 +494,7 @@ public partial class MainPOSPage : Page
                 await LoadOrderSummaryForTable(dto);
             };
 
-            //wpTables.Children.Add(tableItem);
+            wpTables.Children.Add(tableItem);
         }
     }
 
