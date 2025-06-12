@@ -46,28 +46,19 @@
                     IsManipulationEnabled="True"
                     PanningMode="HorizontalOnly"
                     CanContentScroll="False"
-                    Padding="0 3 0 0">
-                    <!--<StackPanel
-                        :Name="spTableCategoryButtons"
-                        Height="60"
-                        Orientation="Horizontal"/>-->
-                    <StackPanel>
-                        <TextBlock Text="Test 1" Height="100" Background="Red"/>
-                        <TextBlock Text="Test 2" Height="100" Background="Blue"/>
-                        <TextBlock Text="Test 3" Height="100" Background="Green"/>
-                        <TextBlock Text="Test 4" Height="100" Background="Yellow"/>
-                        <TextBlock Text="Test 5" Height="100" Background="Purple"/>
-                        <TextBlock Text="Test 5" Height="100" Background="Purple"/>
-                        <TextBlock Text="Test 5" Height="100" Background="Purple"/>
-                    </StackPanel>
+                    Padding="0 3 0 0"
+                    Height="60">
+                    <StackPanel
+                        x:Name="spTableCategoryButtons"
+                        Orientation="Horizontal"/>
                 </ScrollViewer>
 
                 <ScrollViewer 
                     VerticalScrollBarVisibility="Hidden"
                     PanningMode="Both"     
                     CanContentScroll="False"
-                    IsManipulationEnabled="True"
                     PanningDeceleration="0.001"
+                    IsManipulationEnabled="True"
                     PanningRatio="1"
                     MaxHeight="430"
                     Margin="0,0,0,12">
@@ -131,10 +122,10 @@
                         IsManipulationEnabled="True"
                         PanningMode="HorizontalOnly"
                         CanContentScroll="False"
-                        Padding="0 3 0 0">
+                        Padding="0 3 0 0"
+                        Height="60">
                         <StackPanel
                             x:Name="spCategoryButtons"
-                            Height="60"
                             Orientation="Horizontal"/>
                     </ScrollViewer>
 
