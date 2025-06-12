@@ -90,7 +90,28 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        InputManager.Current.PreProcessInput += (s, args) =>
+        {
+            if (args.StagingItem.Input is StylusEventArgs stylusArgs)
+            {
+                stylusArgs.Handled = true;
+            }
+        };
 
+        if (Tablet.TabletDevices.Count == 0)
+        {
+            MessageBox.Show("⚠️ Sensorli qurilma aniqlanmadi.\nScroll ishlamasligi mumkin.",
+                            "Sensor tekshiruvi",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+        }
+        else
+        {
+            MessageBox.Show($"✅ {Tablet.TabletDevices.Count} ta sensorli qurilma aniqlandi.",
+                            "Sensor tekshiruvi",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+        }
         EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent,
             new RoutedEventHandler((sender, args) =>
             {
