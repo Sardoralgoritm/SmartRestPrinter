@@ -6,10 +6,6 @@
              StartupUri="Windows/Auth/LoginWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-            
-            <lc:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-            <lc:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="Styles/ImageStyle.xaml"/>
