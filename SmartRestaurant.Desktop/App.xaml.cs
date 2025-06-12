@@ -90,24 +90,24 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        EventManager.RegisterClassHandler(
-            typeof(Window),
-            UIElement.ManipulationBoundaryFeedbackEvent,
-            new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true)
-        );
+        //EventManager.RegisterClassHandler(
+        //    typeof(Window),
+        //    UIElement.ManipulationBoundaryFeedbackEvent,
+        //    new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true)
+        //);
 
-        EventManager.RegisterClassHandler(
-            typeof(Window),
-            Window.LoadedEvent,
-            new RoutedEventHandler((sender, args) =>
-            {
-                if (sender is Window window)
-                {
-                    Stylus.SetIsPressAndHoldEnabled(window, false);
-                    Stylus.SetIsFlicksEnabled(window, false);
-                }
-            })
-        );
+        //EventManager.RegisterClassHandler(
+        //    typeof(Window),
+        //    Window.LoadedEvent,
+        //    new RoutedEventHandler((sender, args) =>
+        //    {
+        //        if (sender is Window window)
+        //        {
+        //            Stylus.SetIsPressAndHoldEnabled(window, false);
+        //            Stylus.SetIsFlicksEnabled(window, false);
+        //        }
+        //    })
+        //);
 
         if (!LicenseService.IsLicenseValid())
         {
