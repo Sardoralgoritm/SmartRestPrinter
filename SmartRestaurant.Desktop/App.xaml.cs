@@ -90,35 +90,35 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        //EventManager.RegisterClassHandler(
-        //    typeof(Window),
-        //    UIElement.ManipulationBoundaryFeedbackEvent,
-        //    new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true)
-        //);
+        EventManager.RegisterClassHandler(
+            typeof(Window),
+            UIElement.ManipulationBoundaryFeedbackEvent,
+            new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true)
+        );
 
-        //EventManager.RegisterClassHandler(
-        //    typeof(Window),
-        //    Window.LoadedEvent,
-        //    new RoutedEventHandler((sender, args) =>
-        //    {
-        //        if (sender is Window window)
-        //        {
-        //            Stylus.SetIsPressAndHoldEnabled(window, false);
-        //            Stylus.SetIsFlicksEnabled(window, false);
-        //        }
-        //    })
-        //);
+        EventManager.RegisterClassHandler(
+            typeof(Window),
+            Window.LoadedEvent,
+            new RoutedEventHandler((sender, args) =>
+            {
+                if (sender is Window window)
+                {
+                    Stylus.SetIsPressAndHoldEnabled(window, false);
+                    Stylus.SetIsFlicksEnabled(window, false);
+                }
+            })
+        );
 
-        //if (!LicenseService.IsLicenseValid())
-        //{
-        //    MessageBox.Show("Bu dastur faqat ruxsat berilgan kompyuterda ishlaydi!",
-        //        "Litsenziya xatosi",
-        //        MessageBoxButton.OK,
-        //        MessageBoxImage.Error
-        //     );
-        //    Current.Shutdown();
-        //    return;
-        //}
+        if (!LicenseService.IsLicenseValid())
+        {
+            MessageBox.Show("Bu dastur faqat ruxsat berilgan kompyuterda ishlaydi!",
+                "Litsenziya xatosi",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+             );
+            Current.Shutdown();
+            return;
+        }
 
         using var scope = ServiceProvider!.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
