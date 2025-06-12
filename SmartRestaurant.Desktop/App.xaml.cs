@@ -17,6 +17,7 @@ using SmartRestaurant.DataAccess.Repositories;
 using SmartRestaurant.Desktop.Helpers.Security;
 using SmartRestaurant.Domain.Const;
 using SmartRestaurant.Domain.Entities;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -90,32 +91,25 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // MonoBlog uchun maxsus sozlamalar
-        EventManager.RegisterClassHandler(
-            typeof(Window),
-            Window.LoadedEvent,
+        EventManager.RegisterClassHandler(typeof(Window), Window.LoadedEvent,
             new RoutedEventHandler((sender, args) =>
             {
                 if (sender is Window window)
                 {
-                    // Touch screen uchun stylus sozlamalari
                     Stylus.SetIsPressAndHoldEnabled(window, false);
                     Stylus.SetIsFlicksEnabled(window, false);
                     Stylus.SetIsTapFeedbackEnabled(window, false);
-
-                    // Manipulation sozlamalari
                     window.IsManipulationEnabled = true;
                 }
-            })
-        );
+            }));
 
-        // Global manipulation sozlamalari
-        EventManager.RegisterClassHandler(
-            typeof(UIElement),
+        // ScrollViewer scroll xatosini bloklaymiz
+        EventManager.RegisterClassHandler(typeof(UIElement),
             UIElement.ManipulationBoundaryFeedbackEvent,
-            new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true),
-            true
-        );
+            new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) =>
+            {
+                args.Handled = true;
+            }));
 
         // ScrollViewer'lar uchun global sozlamalar
         EventManager.RegisterClassHandler(
@@ -127,17 +121,17 @@ public partial class App : Application
                 {
                     scrollViewer.IsManipulationEnabled = true;
                     scrollViewer.CanContentScroll = false;
+                    scrollViewer.PanningMode = PanningMode.VerticalOnly;
+                    scrollViewer.PanningDeceleration = 0.001;
+                    scrollViewer.PanningRatio = 1.0;
 
-                    // Touch screen device detection
-                    if (Tablet.TabletDevices.Count > 0)
-                    {
-                        scrollViewer.PanningDeceleration = 0.001;
-                        scrollViewer.PanningRatio = 1.0;
-                    }
+                    // Test chiqishi uchun
+                    Debug.WriteLine($"[ScrollViewer] touch-ready: {Tablet.TabletDevices.Count} device(s)");
                 }
             }),
             true
         );
+
 
         if (!LicenseService.IsLicenseValid())
         {
