@@ -18,6 +18,7 @@ using SmartRestaurant.Desktop.Helpers.Security;
 using SmartRestaurant.Domain.Const;
 using SmartRestaurant.Domain.Entities;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace SmartRestaurant.Desktop;
@@ -45,9 +46,6 @@ public partial class App : Application
                 // Shifrlangan connection string’ni o‘qiymiz va AES orqali ochamiz
                 var encryptedConn = configuration.GetConnectionString("DefaultConnection");
                 var decryptedConn = AesEncryptionHelper.Decrypt(encryptedConn);
-
-                //services.AddDbContextFactory<AppDbContext>(options =>
-                //    options.UseNpgsql(decryptedConn));
 
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(decryptedConn));
@@ -92,6 +90,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        // Mavjud manipulation sozlamalari
         EventManager.RegisterClassHandler(
             typeof(Window),
             UIElement.ManipulationBoundaryFeedbackEvent,
@@ -111,6 +110,15 @@ public partial class App : Application
             })
         );
 
+        // MonoBlog touch scroll uchun qo'shimcha sozlamalar
+        EventManager.RegisterClassHandler(typeof(UIElement),
+            UIElement.ManipulationStartedEvent,
+            new EventHandler<ManipulationStartedEventArgs>(OnManipulationStarted), true);
+
+        EventManager.RegisterClassHandler(typeof(ScrollViewer),
+            ScrollViewer.LoadedEvent,
+            new RoutedEventHandler(OnScrollViewerLoaded), true);
+
         if (!LicenseService.IsLicenseValid())
         {
             MessageBox.Show("Bu dastur faqat ruxsat berilgan kompyuterda ishlaydi!",
@@ -118,17 +126,29 @@ public partial class App : Application
                 MessageBoxButton.OK,
                 MessageBoxImage.Error
              );
-
             Current.Shutdown();
             return;
         }
 
         using var scope = ServiceProvider!.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-
         await EnsureTakeawayTableExistsAsync(context);
         await EnsureDefaultUserExistsAsync(context);
+    }
+
+    // Qo'shimcha metodlar
+    private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
+    {
+        e.Handled = false;
+    }
+
+    private void OnScrollViewerLoaded(object sender, RoutedEventArgs e)
+    {
+        if (sender is ScrollViewer scrollViewer)
+        {
+            scrollViewer.IsManipulationEnabled = true;
+            scrollViewer.CanContentScroll = false;
+        }
     }
 
     private async Task EnsureTakeawayTableExistsAsync(AppDbContext context)
