@@ -109,16 +109,16 @@ public partial class App : Application
         //    })
         //);
 
-        if (!LicenseService.IsLicenseValid())
-        {
-            MessageBox.Show("Bu dastur faqat ruxsat berilgan kompyuterda ishlaydi!",
-                "Litsenziya xatosi",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error
-             );
-            Current.Shutdown();
-            return;
-        }
+        //if (!LicenseService.IsLicenseValid())
+        //{
+        //    MessageBox.Show("Bu dastur faqat ruxsat berilgan kompyuterda ishlaydi!",
+        //        "Litsenziya xatosi",
+        //        MessageBoxButton.OK,
+        //        MessageBoxImage.Error
+        //     );
+        //    Current.Shutdown();
+        //    return;
+        //}
 
         using var scope = ServiceProvider!.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
