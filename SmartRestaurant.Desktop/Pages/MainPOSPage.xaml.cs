@@ -77,10 +77,6 @@ public partial class MainPOSPage : Page
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         await RefreshPageDataAsync();
-
-        await Task.Delay(100);
-
-        ConfigureScrollViewersForTouch();
     }
 
     public void AddOrderItem(ProductDto product)
@@ -1320,108 +1316,5 @@ public partial class MainPOSPage : Page
         lblAdditional.Visibility = Visibility.Visible;
 
         user_name.Text = SessionManager.FirstName + " | " + SessionManager.Role;
-    }
-
-    private void ConfigureScrollViewersForTouch()
-    {
-        foreach (var scrollViewer in FindVisualChildren<ScrollViewer>(this))
-        {
-            // Asosiy manipulation sozlamalari
-            scrollViewer.IsManipulationEnabled = true;
-            scrollViewer.CanContentScroll = false;
-
-            // Vertical scroll uchun
-            if (scrollViewer.VerticalScrollBarVisibility != ScrollBarVisibility.Disabled)
-            {
-                scrollViewer.PanningMode = PanningMode.VerticalOnly;
-            }
-            // Horizontal scroll uchun  
-            else if (scrollViewer.HorizontalScrollBarVisibility != ScrollBarVisibility.Disabled)
-            {
-                scrollViewer.PanningMode = PanningMode.HorizontalOnly;
-            }
-
-            // MonoBlog uchun zaruriy sozlamalar
-            scrollViewer.PanningDeceleration = 0.001;
-            scrollViewer.PanningRatio = 1.0;
-            scrollViewer.Focusable = false;
-            scrollViewer.IsTabStop = false;
-
-            // Touch/Manipulation eventlarini qo'shish
-            scrollViewer.ManipulationStarted += ScrollViewer_ManipulationStarted;
-            scrollViewer.ManipulationDelta += ScrollViewer_ManipulationDelta;
-            scrollViewer.ManipulationCompleted += ScrollViewer_ManipulationCompleted;
-            scrollViewer.ManipulationBoundaryFeedback += OnManipulationBoundaryFeedback;
-
-            // Debugging uchun
-            Console.WriteLine($"Configured ScrollViewer: {scrollViewer.Name ?? "Unnamed"}, PanningMode: {scrollViewer.PanningMode}");
-        }
-    }
-
-    // Manipulation event handler'lari:
-    private void ScrollViewer_ManipulationStarted(object sender, ManipulationStartedEventArgs e)
-    {
-        if (sender is ScrollViewer scrollViewer)
-        {
-            //e.ManipulationContainer = scrollViewer;
-            e.Handled = false;
-        }
-    }
-
-    private void ScrollViewer_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
-    {
-        if (sender is ScrollViewer scrollViewer)
-        {
-            var deltaV = e.DeltaManipulation.Translation.Y;
-            var deltaH = e.DeltaManipulation.Translation.X;
-
-            // Vertical scroll
-            if (scrollViewer.PanningMode == PanningMode.VerticalOnly || scrollViewer.PanningMode == PanningMode.Both)
-            {
-                if (Math.Abs(deltaV) > 1)
-                {
-                    scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - deltaV);
-                }
-            }
-
-            // Horizontal scroll
-            if (scrollViewer.PanningMode == PanningMode.HorizontalOnly || scrollViewer.PanningMode == PanningMode.Both)
-            {
-                if (Math.Abs(deltaH) > 1)
-                {
-                    scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - deltaH);
-                }
-            }
-
-            e.Handled = true;
-        }
-    }
-
-    private void ScrollViewer_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
-    {
-        e.Handled = true;
-    }
-
-    private void OnManipulationBoundaryFeedback(object sender, ManipulationBoundaryFeedbackEventArgs e)
-    {
-        e.Handled = true;
-    }
-
-    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject parent) where T : DependencyObject
-    {
-        if (parent == null) yield break;
-
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-        {
-            var child = VisualTreeHelper.GetChild(parent, i);
-            if (child is T t)
-            {
-                yield return t;
-            }
-            foreach (var childOfChild in FindVisualChildren<T>(child))
-            {
-                yield return childOfChild;
-            }
-        }
     }
 }

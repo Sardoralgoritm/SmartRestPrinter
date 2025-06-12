@@ -90,7 +90,12 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // MonoBlog uchun maxsus sozlamalar
+        EventManager.RegisterClassHandler(
+            typeof(Window),
+            UIElement.ManipulationBoundaryFeedbackEvent,
+            new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true)
+        );
+
         EventManager.RegisterClassHandler(
             typeof(Window),
             Window.LoadedEvent,
@@ -98,45 +103,10 @@ public partial class App : Application
             {
                 if (sender is Window window)
                 {
-                    // Touch screen uchun stylus sozlamalari
                     Stylus.SetIsPressAndHoldEnabled(window, false);
                     Stylus.SetIsFlicksEnabled(window, false);
-                    Stylus.SetIsTapFeedbackEnabled(window, false);
-
-                    // Manipulation sozlamalari
-                    window.IsManipulationEnabled = true;
                 }
             })
-        );
-
-        // Global manipulation sozlamalari
-        EventManager.RegisterClassHandler(
-            typeof(UIElement),
-            UIElement.ManipulationBoundaryFeedbackEvent,
-            new EventHandler<ManipulationBoundaryFeedbackEventArgs>((sender, args) => args.Handled = true),
-            true
-        );
-
-        // ScrollViewer'lar uchun global sozlamalar
-        EventManager.RegisterClassHandler(
-            typeof(ScrollViewer),
-            ScrollViewer.LoadedEvent,
-            new RoutedEventHandler((sender, args) =>
-            {
-                if (sender is ScrollViewer scrollViewer)
-                {
-                    scrollViewer.IsManipulationEnabled = true;
-                    scrollViewer.CanContentScroll = false;
-
-                    // Touch screen device detection
-                    if (Tablet.TabletDevices.Count > 0)
-                    {
-                        scrollViewer.PanningDeceleration = 0.001;
-                        scrollViewer.PanningRatio = 1.0;
-                    }
-                }
-            }),
-            true
         );
 
         if (!LicenseService.IsLicenseValid())

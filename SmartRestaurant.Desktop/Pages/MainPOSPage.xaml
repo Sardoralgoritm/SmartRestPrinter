@@ -54,9 +54,8 @@
                 </ScrollViewer>
 
                 <ScrollViewer 
-                    VerticalScrollBarVisibility="Auto"
-                    HorizontalScrollBarVisibility="Disabled"
-                    PanningMode="VerticalOnly"     
+                    VerticalScrollBarVisibility="Hidden"
+                    PanningMode="Both"     
                     CanContentScroll="False"
                     IsManipulationEnabled="True"
                     PanningDeceleration="0.001"
@@ -149,8 +148,7 @@
                         HorizontalAlignment="Center"/>
 
                     <ScrollViewer 
-                        VerticalScrollBarVisibility="Auto"
-                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Hidden"
                         PanningMode="VerticalOnly"
                         IsManipulationEnabled="True"
                         CanContentScroll="False"
