@@ -77,6 +77,8 @@ public partial class MainPOSPage : Page
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         await RefreshPageDataAsync();
+
+        this.DisableTouchScrollBounce();
     }
 
     public void AddOrderItem(ProductDto product)
