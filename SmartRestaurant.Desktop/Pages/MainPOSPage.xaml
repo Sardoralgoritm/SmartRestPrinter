@@ -40,7 +40,7 @@
                     FontSize="20"
                     FontWeight="Bold"/>
 
-                <!--<ScrollViewer
+                <ScrollViewer
                     HorizontalScrollBarVisibility="Hidden"
                     VerticalScrollBarVisibility="Hidden"
                     IsManipulationEnabled="True"
@@ -51,7 +51,7 @@
                     <StackPanel
                         x:Name="spTableCategoryButtons"
                         Orientation="Horizontal"/>
-                </ScrollViewer>-->
+                </ScrollViewer>
 
                 <ScrollViewer 
                     VerticalScrollBarVisibility="Hidden"
@@ -78,8 +78,9 @@
                         <TextBlock Text="Test 5" Height="100" Background="Purple"/>
                         <TextBlock Text="Test 6" Height="100" Background="Orange"/>
                         <TextBlock Text="Test 7" Height="100" Background="Pink"/>
-                        <TextBlock Text="Test 7" Height="100" Background="Pink"/>
-                        <TextBlock Text="Test 7" Height="100" Background="Pink"/>
+                        <TextBlock Text="Test 8" Height="100" Background="Brown"/>
+                        <TextBlock Text="Test 8" Height="100" Background="Brown"/>
+                        <TextBlock Text="Test 8" Height="100" Background="Brown"/>
                         <TextBlock Text="Test 8" Height="100" Background="Brown"/>
                     </StackPanel>
 
@@ -129,7 +130,7 @@
                         FontSize="20"
                         FontWeight="Bold"/>
 
-                    <!--<ScrollViewer
+                    <ScrollViewer
                         HorizontalScrollBarVisibility="Hidden"
                         VerticalScrollBarVisibility="Hidden"
                         IsManipulationEnabled="True"
@@ -140,7 +141,7 @@
                         <StackPanel
                             x:Name="spCategoryButtons"
                             Orientation="Horizontal"/>
-                    </ScrollViewer>-->
+                    </ScrollViewer>
 
                     <TextBox
                         Name="tb_search_Product"
@@ -169,22 +170,10 @@
                         PanningDeceleration="0.001"
                         PanningRatio="1">
 
-                        <!--<StackPanel 
+                        <StackPanel 
                             x:Name="spProducts"
                             Margin="0"
-                            Orientation="Vertical" />-->
-                        <StackPanel>
-                            <TextBlock Text="Test 1" Height="100" Background="Red"/>
-                            <TextBlock Text="Test 2" Height="100" Background="Blue"/>
-                            <TextBlock Text="Test 3" Height="100" Background="Green"/>
-                            <TextBlock Text="Test 4" Height="100" Background="Yellow"/>
-                            <TextBlock Text="Test 5" Height="100" Background="Purple"/>
-                            <TextBlock Text="Test 6" Height="100" Background="Orange"/>
-                            <TextBlock Text="Test 7" Height="100" Background="Pink"/>
-                            <TextBlock Text="Test 7" Height="100" Background="Pink"/>
-                            <TextBlock Text="Test 7" Height="100" Background="Pink"/>
-                            <TextBlock Text="Test 8" Height="100" Background="Brown"/>
-                        </StackPanel>
+                            Orientation="Vertical" />
 
                     </ScrollViewer>
 
