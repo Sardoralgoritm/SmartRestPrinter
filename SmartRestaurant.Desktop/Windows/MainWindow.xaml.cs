@@ -17,6 +17,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        this.TouchDown += (s, e) =>
+        {
+            MessageBox.Show("Touch keldi!");
+        };
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)

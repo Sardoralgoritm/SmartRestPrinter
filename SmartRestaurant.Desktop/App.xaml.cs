@@ -18,6 +18,7 @@ using SmartRestaurant.Desktop.Helpers.Security;
 using SmartRestaurant.Domain.Const;
 using SmartRestaurant.Domain.Entities;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -90,6 +91,8 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+
         InputManager.Current.PreProcessInput += (s, args) =>
         {
             if (args.StagingItem.Input is StylusEventArgs stylusArgs)
@@ -97,6 +100,8 @@ public partial class App : Application
                 stylusArgs.Handled = true;
             }
         };
+
+        StylusPlugIns.DisableStylus();
 
         if (Tablet.TabletDevices.Count == 0)
         {
@@ -170,6 +175,26 @@ public partial class App : Application
         await EnsureTakeawayTableExistsAsync(context);
         await EnsureDefaultUserExistsAsync(context);
     }
+
+    public static class StylusPlugIns
+    {
+        public static void DisableStylus()
+        {
+            // Stylus'ni Application darajasida o‘chiradi
+            var inputManager = typeof(InputManager).Assembly.GetType("System.Windows.Input.StylusLogic");
+            if (inputManager == null) return;
+
+            var current = typeof(InputManager).GetProperty("StylusLogic", BindingFlags.NonPublic | BindingFlags.Instance);
+            var instance = current?.GetValue(InputManager.Current);
+
+            if (instance != null)
+            {
+                var disableMethod = instance.GetType().GetMethod("Disable", BindingFlags.NonPublic | BindingFlags.Instance);
+                disableMethod?.Invoke(instance, null);
+            }
+        }
+    }
+
 
     private async Task EnsureTakeawayTableExistsAsync(AppDbContext context)
     {

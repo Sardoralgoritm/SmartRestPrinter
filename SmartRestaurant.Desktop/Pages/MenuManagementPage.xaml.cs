@@ -29,6 +29,10 @@ public partial class MenuManagementPage : Page
         InitializeComponent();
         _productService = App.ServiceProvider.GetRequiredService<IProductService>();
         _categoryService = App.ServiceProvider.GetRequiredService<ICategoryService>();
+        this.TouchDown += (s, e) =>
+        {
+            MessageBox.Show("Touch keldi!");
+        };
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)  

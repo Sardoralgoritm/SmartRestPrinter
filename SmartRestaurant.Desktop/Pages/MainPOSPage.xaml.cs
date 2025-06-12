@@ -72,6 +72,10 @@ public partial class MainPOSPage : Page
 
         nfi = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
         nfi.NumberGroupSeparator = " ";
+        this.TouchDown += (s, e) =>
+        {
+            MessageBox.Show("Touch keldi!");
+        };
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
