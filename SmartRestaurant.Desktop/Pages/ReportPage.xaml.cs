@@ -14,6 +14,7 @@ using SmartRestaurant.Desktop.Helpers.Session;
 using SmartRestaurant.Desktop.Service;
 using SmartRestaurant.Desktop.Windows.Extensions;
 using SmartRestaurant.Domain.Const;
+using SmartRestaurant.Domain.Entities;
 using SmartRestaurant.Domain.Models.PageResult;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
@@ -163,6 +164,21 @@ public partial class ReportPage : Page, INotifyPropertyChanged
         }
     }
 
+    private string? GetSelectedOrderStatus()
+    {
+        if (status.SelectedIndex == -1)
+            return OrderStatus.Closed;
+
+        return status.SelectedIndex switch
+        {
+            0 => OrderStatus.Canceled,
+            1 => OrderStatus.Free,
+            2 => OrderStatus.Closed,  
+            3 => null,
+            _ => OrderStatus.Closed   
+        };
+    }
+
     public async Task GetReport()
     {
         st_Order.Children.Clear();
@@ -171,7 +187,7 @@ public partial class ReportPage : Page, INotifyPropertyChanged
 
         var option = new OrderSortFilterOptions()
         {
-            Status = OrderStatus.Closed,
+            Status = GetSelectedOrderStatus(),
             SortBy = "queue"
         };
 
@@ -184,13 +200,22 @@ public partial class ReportPage : Page, INotifyPropertyChanged
         option.Page = _currentPage;
 
         var orders = _orderService.GetAll(option);
-
-        _lastPage = orders.TotalPages;
-        Last_Page_Button.Content = orders.TotalPages;
-
         var report = await _orderService.GetReportOrder(option);
+        var products = _orderService.GetAllReportOrder(option);
 
-        ShowOrders(orders);
+        if (option.Status == null)
+        {
+            ShowProducts(products);
+            _lastPage = products.TotalPages;
+            Last_Page_Button.Content = products.TotalPages;
+        }
+        else
+        {
+            ShowOrders(orders);
+            _lastPage = orders.TotalPages;
+            Last_Page_Button.Content = orders.TotalPages;
+        }
+
         ShowReport(report);
     }
 
@@ -339,6 +364,10 @@ public partial class ReportPage : Page, INotifyPropertyChanged
             option.Page = _currentPage;
 
             var products = _orderService.GetAllReportOrder(option);
+
+            _lastPage = products.TotalPages;
+            Last_Page_Button.Content = products.TotalPages;
+
             var report = await _orderService.GetReportOrder(option);
             ShowProducts(products);
             ShowReport(report);
