@@ -2,9 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SmartRestaurant.Desktop"
+             xmlns:lc="clr-namespace:SmartRestaurant.Desktop.Helpers.Converters"
              StartupUri="Windows/Auth/LoginWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+            <lc:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+            <lc:NotNullToVisibilityConverter x:Key="NotNullToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="Styles/ImageStyle.xaml"/>
