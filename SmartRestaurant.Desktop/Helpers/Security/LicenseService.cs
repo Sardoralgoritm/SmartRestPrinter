@@ -10,35 +10,35 @@ public static class LicenseService
 
     private static string LicenseFilePath => Path.Combine(AppDir, "libhelper.dll");
 
-    public static string GetCpuId()
+    public static async Task<string> GetCpuIdAsync()
     {
-        try
+        return await Task.Run(() =>
         {
-            using var searcher = new ManagementObjectSearcher("select ProcessorId from Win32_Processor");
-            foreach (var obj in searcher.Get())
+            try
             {
-                return obj["ProcessorId"]?.ToString() ?? string.Empty;
+                using var searcher = new ManagementObjectSearcher("select ProcessorId from Win32_Processor");
+                foreach (var obj in searcher.Get())
+                {
+                    return obj["ProcessorId"]?.ToString() ?? string.Empty;
+                }
             }
-        }
-        catch
-        {
+            catch
+            {
+                return string.Empty;
+            }
             return string.Empty;
-        }
-
-        return string.Empty;
+        });
     }
 
-    public static bool IsLicenseValid()
+    public static async Task<bool> IsLicenseValidAsync()
     {
         if (!File.Exists(LicenseFilePath))
             return false;
-
         try
         {
-            var savedCpuId = File.ReadAllText(LicenseFilePath).Trim();
-            var currentCpuId = GetCpuId();
-
-            return savedCpuId == currentCpuId;
+            var savedCpuId = await File.ReadAllTextAsync(LicenseFilePath);
+            var currentCpuId = await GetCpuIdAsync();
+            return savedCpuId.Trim() == currentCpuId;
         }
         catch
         {

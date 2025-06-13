@@ -109,7 +109,7 @@ public partial class App : Application
             })
         );
 
-        if (!LicenseService.IsLicenseValid())
+        if (!await LicenseService.IsLicenseValidAsync())
         {
             MessageBox.Show("Bu dastur faqat ruxsat berilgan kompyuterda ishlaydi!",
                 "Litsenziya xatosi",
